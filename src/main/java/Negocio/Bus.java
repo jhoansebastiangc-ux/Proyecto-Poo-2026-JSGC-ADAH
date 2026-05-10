@@ -48,6 +48,10 @@ public class Bus {
         return estado;
     }
 
+    public Puesto[] getMyPuestos() {
+        return myPuestos;
+    }
+
     public void setPlaca(String placa) {
         this.placa = placa;
     }
@@ -63,7 +67,7 @@ public class Bus {
     @Override
     public String toString() {
         //no exite bus sin puesto
-        return "Placa:" + placa + "\nTipo De Servicio:" + tipoServ + "\nCapacidad:" + myPuestos.length + "\n Estado:" + estado+"\n" ;
+        return "Placa: " + placa + "\nTipo De Servicio: " + tipoServ + "\nCapacidad: " + myPuestos.length + "\nEstado: " + estado+"\n" ;
     }
     
     
