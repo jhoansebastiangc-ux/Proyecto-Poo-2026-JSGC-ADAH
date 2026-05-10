@@ -15,9 +15,8 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
     
     public MenuPrincipal() {
         this.myEmpresa=new Empresa();
-        //aqui no
-        this.myEmpresa.registrarDatosBase();
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     public Empresa getMyEmpresa() {
@@ -39,6 +38,7 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
         cmdReportes = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setLocation(new java.awt.Point(0, 0));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel1.setText("MENU PRINCIPAL");
@@ -129,12 +129,14 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
      // TODO add your handling code here:
      FrmCajaDia cajaDia=new FrmCajaDia(this);
      cajaDia.setVisible(true);
+     this.setVisible(false);
     }//GEN-LAST:event_cmdCajaDiaActionPerformed
 
     private void cmdParametrizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdParametrizacionActionPerformed
     // TODO add your handling code here:
     Parametrizacion myParametrizacion=new Parametrizacion(this);
     myParametrizacion.setVisible(true);
+    this.setVisible(false);
     }//GEN-LAST:event_cmdParametrizacionActionPerformed
 
     private void cmdCancelacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCancelacionesActionPerformed
@@ -146,12 +148,14 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
        // TODO add your handling code here:
        FrmVentaDePasajes venta=new FrmVentaDePasajes(this);
        venta.setVisible(true);
+       this.setVisible(false);
     }//GEN-LAST:event_cmdVentaActionPerformed
 
     private void cmdReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdReportesActionPerformed
       // TODO add your handling code here:
       Reportes reportes=new Reportes(this);
       reportes.setVisible(true);
+      this.setVisible(false);
     }//GEN-LAST:event_cmdReportesActionPerformed
 
     public static void main(String args[]) {

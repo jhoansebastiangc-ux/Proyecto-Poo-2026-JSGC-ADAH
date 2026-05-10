@@ -11,11 +11,11 @@ package Negocio;
 public class Puesto {
     
     private int numAsiento;
-    private boolean ocupado;
+    private String estado;
 
     public Puesto(int numAsiento) {
         this.numAsiento = numAsiento;
-        this.ocupado = false;
+        this.estado = "Disponible";
     }
     
 
@@ -23,20 +23,20 @@ public class Puesto {
         return numAsiento;
     }
 
-    public boolean isOcupado() {
-        return ocupado;
+    public String isOcupado() {
+        return estado;
     }
 
     public void ocupar() {
-        this.ocupado = true;
+        this.estado = "Ocupado";
     }
     public void liberar() {
-        this.ocupado = false;
+        this.estado = "Disponible";
     }
 
     @Override
     public String toString() {
-        return "Puesto{" + "numAsiento=" + numAsiento +"- Estado: "+(ocupado?"Ocupado":"Libre");
+        return "Puesto{" + "numAsiento=" + numAsiento +"- Estado: "+ estado;
     }
     
     

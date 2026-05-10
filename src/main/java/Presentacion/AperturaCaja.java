@@ -16,6 +16,7 @@ public class AperturaCaja extends javax.swing.JFrame {
      */
     public AperturaCaja() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
