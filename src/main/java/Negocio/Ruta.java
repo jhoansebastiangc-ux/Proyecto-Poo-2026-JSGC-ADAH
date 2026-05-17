@@ -15,12 +15,12 @@ public class Ruta {
     private int Tarifab;
 
     public Ruta(int cont,String origen, String destino, int Tarifab) {
-        this.codigo = codigoRuta(cont);
+        this.codigo = generarCodigoRuta(cont);
         this.origen = origen;
         this.destino = destino;
         this.Tarifab = Tarifab;
     }
-    private String codigoRuta(int cont){
+    private String generarCodigoRuta(int cont){
         cont++;
         String cod=String.format("R%02d",cont);
         return cod;

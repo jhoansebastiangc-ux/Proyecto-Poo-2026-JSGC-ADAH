@@ -11,21 +11,36 @@ import java.util.ArrayList;
 public class Empresa {
     private ArrayList<Bus> myBuses;
     private ArrayList<Ruta> myRutas;
+    private ArrayList<Salida> mySalidas;
     public Empresa() {
         //Aquí se inicializa los atributos de las clases
         this.myBuses=new ArrayList<>();
         this.myRutas=new ArrayList<>();
+        this.mySalidas=new ArrayList<>();
         registrarDatosBase();      
 
     }
-    public ArrayList<Bus> getMyBuses() {
-    return myBuses;
+    public String cargarPlacas() {
+        StringBuilder cad=new StringBuilder();
+        for(Bus b:myBuses){
+            cad.append(b.getPlaca()).append(",");
+        }
+    return cad.toString();
 }
+    
+    public String cargarRutas(){
+        StringBuilder cad=new StringBuilder();
+        for (Ruta r:myRutas){
+            cad.append(r.getCodigo()).append(",");
+        }
+        return cad.toString();
+    }
     
     //Métodos para la creación de los objetos por default    
     private void registrarDatosBase(){
         registrarBusesBase();
         registrarRutasBase();
+        registrarSalidasBase();
     }
     
     //Creación de objetos tipo Bus por default
@@ -46,6 +61,17 @@ public class Empresa {
         myRutas.add(new Ruta(2,"Cucuta","Medellin",180000));
         myRutas.add(new Ruta(3,"Cucuta","Cartagena",220000));
     }
+    //Creación de objetos tipo Salida por default
+    private void registrarSalidasBase(){
+        mySalidas.add(new Salida(1,"R01","15/03/2026","06:00","KAA-101"));
+        mySalidas.add(new Salida(2,"R01","15/03/2026","14:00","KBB-202"));        
+        mySalidas.add(new Salida(3,"R02","16/03/2026","07:00","KCC-303"));
+        mySalidas.add(new Salida(4,"R02","16/03/2026","20:00","KDD-404"));
+        mySalidas.add(new Salida(5,"R03","17/03/2026","05:30 ","KFF-606"));
+        mySalidas.add(new Salida(6,"R03","17/03/2026","18:00","KAA-101"));
+        mySalidas.add(new Salida(7,"R04","18/03/2026","06:30","KCC-303"));
+        mySalidas.add(new Salida(8,"R04","18/03/2026","19:30","KBB-202"));
+    }
     
     //REQUERIMIENTOS FUNCIONALES #1
     
@@ -63,6 +89,7 @@ public class Empresa {
       
     //Método para registrar objetos tipo Ruta
     public String registrarRuta(String origen,String destino,int tarifa){
+
         String cad="";
         if(!validarRuta(origen,destino)){
         int contR=buscarCodUltimaRuta();
@@ -73,7 +100,22 @@ public class Empresa {
             cad="Ruta ya Registrada";
         }
         return cad;
+
     }
+    
+    //Metodo para registrar objetos tipo salida
+    public String registrarSalida(String fecha,String hora,String ruta,String bus){
+        for (Salida s:mySalidas){
+          if(s.getBusAsignado().equals(bus)&& s.getFecha().equals(fecha))  {
+              return "El bus ya tiene una ruta asignada para esa fecha";
+          }
+        }
+        int cod=buscarCodUltimaSalida();
+        mySalidas.add(new Salida(cod,ruta,fecha,hora,bus));
+        return "Salida registrada\n"+ mySalidas.getLast().toString();
+    }
+    
+    
     
     //Método para la validación de las Placas
     public boolean validarPlaca(String placa){
@@ -107,6 +149,15 @@ public class Empresa {
         int numCod=Integer.parseInt(cod.substring(1));
         return numCod;
     }
+    //Método para buscar el codigo de la última Salida creada
+    private int buscarCodUltimaSalida(){
+        String cod=this.mySalidas.getLast().getIdSalida();
+        if(cod.length()==0){
+            return 1;
+        }
+        int numCod=Integer.parseInt(cod.substring(1))+1;
+        return numCod;
+    }
     
     //Método para listar los Buses creados 
     public  String  listarBus( ){
@@ -134,31 +185,63 @@ public class Empresa {
          return cad.toString();
     }
     
-    public Bus buscarBus(String placa){
-
-      for(Bus myBus : myBuses){
-
-         if(myBus.getPlaca().equals(placa)){
-            return myBus;
+    //Metodo para listar las salidas creadas
+    public String listarSalida(){
+        StringBuilder cad= new StringBuilder();
+        for (Salida s:mySalidas){
+            cad.append(s.toString()).append("\n");
+        }
+         if(cad.length()==0){
+            cad.append("No hay rutas registradas");
          }
-      }
-
-           return null;
+         return cad.toString();
     }
     
     //
-    public String actualizarBus(
-        String placa,
-        String nuevoEstado){
+    public String actualizarBus(String placa,String nuevoEstado){
 
-        Bus myBus = buscarBus(placa);
-
-        if(myBus != null){
-         myBus.setEstado(nuevoEstado);
-         return "Estado actualizado correctamente";
-       }
+        for (Bus b:myBuses){
+            if (b.getPlaca().equals(placa)){
+                b.setEstado(nuevoEstado);
+                return "Estado actualizado correctamente";
+            }
+        }
 
     return "Bus no encontrado";
 }
+    
+    public String actualizarRuta(String cod,int nuevatarifa){
+        try{for (Ruta r:myRutas){
+            if (r.getCodigo().equals(cod)){
+                r.setTarifab(nuevatarifa);
+                return "Ruta actualizada";
+            }
+        }
+        return "No se encontro esa ruta";
+        }catch(NumberFormatException e){
+            return "Ingrese un valor válido";
+        }
+    }
+   public String retornarDatosbus(String placa){
+       String cad="";
+       for (Bus b:myBuses){
+           if(b.getPlaca().equals(placa)){
+               cad=(b.getTipoServ()+","+b.getEstado());
+               break;
+           }
+       }
+       return cad;
+   }
+   
+   public String retornarDatosRuta(String codigo){
+       String cad="";
+       for (Ruta r:myRutas){
+           if(r.getCodigo().equals(codigo)){
+               cad=(r.getOrigen()+","+r.getDestino()+","+r.getTarifab());
+               break;
+           }
+       }
+       return cad;
+   }
     
 }
