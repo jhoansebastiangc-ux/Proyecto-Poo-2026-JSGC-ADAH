@@ -3,6 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Negocio;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Calendar;
+import java.text.ParseException;
 /**
  *
  * @author CAMILA ARIAS
@@ -14,20 +18,43 @@ public class Salida {
     private String hora;
     private String busAsignado;
     private String estado;
-
-    public Salida(int codSalida, String ruta, String fecha, String hora, String busAsignado) {
+    private String fechaLlegada;
+    private String horaLlegada;
+    private double tarifa;
+    
+    public Salida(int codSalida, String ruta, String fecha, String hora, String busAsignado, int rutaTime) {
+        String fechaLlegada="";
+        String horaLlegada="";
+        try{
+        String salidaComp=fecha+" "+hora;
+        SimpleDateFormat formato =new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        Date salida = formato.parse(salidaComp);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(salida);
+        cal.add(Calendar.HOUR_OF_DAY, rutaTime);
+        Date llegada=cal.getTime();
+        SimpleDateFormat formatoFecha =new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat formatoHora =new SimpleDateFormat("HH:mm");
+        fechaLlegada =formatoFecha.format(llegada);
+        horaLlegada =formatoHora.format(llegada);
+        }catch(ParseException e){
+          //Genera error si no se pone try-catch  
+        }
         this.idSalida = generarCodigoSalida(codSalida);
         this.ruta = ruta;
         this.fecha = fecha;
         this.hora = hora;
         this.busAsignado = busAsignado;
         this.estado = "Programada";
+        this.fechaLlegada= fechaLlegada;
+        this.horaLlegada= horaLlegada;
     }
+    
     private String generarCodigoSalida(int codSalida){
         String cod=String.format("S%03d",codSalida);
         return cod;
     }
-
+    
     public String getIdSalida() {
         return idSalida;
     }
@@ -51,6 +78,15 @@ public class Salida {
     public String getEstado() {
         return estado;
     }
+
+    public String getFechaLlegada() {
+        return fechaLlegada;
+    }
+
+    public String getHoraLlegada() {
+        return horaLlegada;
+    }
+    
 
     public void setIdSalida(String idSalida) {
         this.idSalida = idSalida;
@@ -76,9 +112,20 @@ public class Salida {
         this.estado = estado;
     }
 
+    public void setFechaLlegada(String fechaLlegada) {
+        this.fechaLlegada = fechaLlegada;
+    }
+
+    public void setHoraLlegada(String horaLlegada) {
+        this.horaLlegada = horaLlegada;
+    }
+    
+
     @Override
     public String toString() {
-        return "Salida\nidSalida=" + idSalida + "\nruta=" + ruta + "\nfecha=" + fecha + "\nhora=" + hora + "\nbusAsignado=" + busAsignado + "\nestado=" + estado+"\n";
+        return "Salida\nidSalida=" + idSalida + "\nRuta=" + ruta + "\nFechaSalida=" + fecha + 
+                "\nHoraSalida=" + hora + "\nBusAsignado=" + busAsignado +"\nFechaLlegada="+fechaLlegada+
+                "\nHoraLlegada="+horaLlegada +"\nEstado=" + estado+"\n";
     }
     
 }

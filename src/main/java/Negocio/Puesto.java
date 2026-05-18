@@ -36,7 +36,7 @@ public class Puesto {
 
     @Override
     public String toString() {
-        return "Puesto{" + "numAsiento=" + numAsiento +"- Estado: "+ estado;
+        return "Puesto\nnumAsiento=" + numAsiento +"\nEstado: "+ estado;
     }
     
     

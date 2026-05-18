@@ -12,12 +12,14 @@ public class Ruta {
     private String codigo;
     private String origen;
     private String destino;
+    private int viajeTime;
     private int Tarifab;
 
-    public Ruta(int cont,String origen, String destino, int Tarifab) {
+    public Ruta(int cont,String origen, String destino,int viajeTime, int Tarifab) {
         this.codigo = generarCodigoRuta(cont);
         this.origen = origen;
         this.destino = destino;
+        this.viajeTime=viajeTime;
         this.Tarifab = Tarifab;
     }
     private String generarCodigoRuta(int cont){
@@ -41,6 +43,11 @@ public class Ruta {
         return Tarifab;
     }
 
+    public int getViajeTime() {
+        return viajeTime;
+    }
+    
+
     public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
@@ -57,9 +64,13 @@ public class Ruta {
         this.Tarifab = Tarifab;
     }
 
+    public void setViajeTime(int viajeTime) {
+        this.viajeTime = viajeTime;
+    }
+
     @Override
     public String toString() {
-        return "Codigo=" + codigo + "\nOrigen=" + origen + "\nDestino=" + destino + "\nTarifa Base=" + Tarifab+"\n";
+        return "Codigo=" + codigo + "\nOrigen=" + origen + "\nDestino=" + destino + "\nTiempo de viaje= "+viajeTime+"\nTarifa Base=" + Tarifab+"\n";
     }
     
   

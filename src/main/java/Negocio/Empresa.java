@@ -4,6 +4,10 @@
  */
 package Negocio;
 import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Calendar;
+import java.text.ParseException;
 /**
  *
  * @author CAMILA ARIAS
@@ -20,6 +24,8 @@ public class Empresa {
         registrarDatosBase();      
 
     }
+    
+    //Metodo usado para cargar las placas dentro de un comboBox
     public String cargarPlacas() {
         StringBuilder cad=new StringBuilder();
         for(Bus b:myBuses){
@@ -27,7 +33,8 @@ public class Empresa {
         }
     return cad.toString();
 }
-    
+   
+    //Metodo usado para cargar las rutas dentro de un comboBox
     public String cargarRutas(){
         StringBuilder cad=new StringBuilder();
         for (Ruta r:myRutas){
@@ -56,23 +63,47 @@ public class Empresa {
     
     //Creación de objetos tipo Ruta por default
     private void registrarRutasBase(){
-        myRutas.add(new Ruta(0,"Cucuta","Bucaramanga",80000));
-        myRutas.add(new Ruta(1,"Cucuta","Bogota",160000));
-        myRutas.add(new Ruta(2,"Cucuta","Medellin",180000));
-        myRutas.add(new Ruta(3,"Cucuta","Cartagena",220000));
+        myRutas.add(new Ruta(0,"Cucuta","Bucaramanga",6,80000));
+        myRutas.add(new Ruta(1,"Cucuta","Bogota",15,160000));
+        myRutas.add(new Ruta(2,"Cucuta","Medellin",16,180000));
+        myRutas.add(new Ruta(3,"Cucuta","Cartagena",17,220000));
     }
     //Creación de objetos tipo Salida por default
     private void registrarSalidasBase(){
-        mySalidas.add(new Salida(1,"R01","15/03/2026","06:00","KAA-101"));
-        mySalidas.add(new Salida(2,"R01","15/03/2026","14:00","KBB-202"));        
-        mySalidas.add(new Salida(3,"R02","16/03/2026","07:00","KCC-303"));
-        mySalidas.add(new Salida(4,"R02","16/03/2026","20:00","KDD-404"));
-        mySalidas.add(new Salida(5,"R03","17/03/2026","05:30 ","KFF-606"));
-        mySalidas.add(new Salida(6,"R03","17/03/2026","18:00","KAA-101"));
-        mySalidas.add(new Salida(7,"R04","18/03/2026","06:30","KCC-303"));
-        mySalidas.add(new Salida(8,"R04","18/03/2026","19:30","KBB-202"));
+        mySalidas.add(new Salida(1,"R01","15/03/2026","06:00","KAA-101",6));
+        mySalidas.add(new Salida(2,"R01","15/03/2026","14:00","KBB-202",6));        
+        mySalidas.add(new Salida(3,"R02","16/03/2026","07:00","KCC-303",15));
+        mySalidas.add(new Salida(4,"R02","16/03/2026","20:00","KDD-404",15));
+        mySalidas.add(new Salida(5,"R03","17/03/2026","05:30 ","KFF-606",16));
+        mySalidas.add(new Salida(6,"R03","17/03/2026","18:00","KAA-101",16));
+        mySalidas.add(new Salida(7,"R04","18/03/2026","06:30","KCC-303",17));
+        mySalidas.add(new Salida(8,"R04","18/03/2026","19:30","KBB-202",17));
     }
     
+        //Metodo Usado para retornar los datos que tenga un bus
+   public String retornarDatosbus(String placa){
+       String cad="";
+       for (Bus b:myBuses){
+           if(b.getPlaca().equals(placa)){
+               cad=(b.getTipoServ()+","+b.getEstado());
+               break;
+           }
+       }
+       return cad;
+   }
+   
+    //Metodo Usado para retornar los datos que tenga una ruta
+   public String retornarDatosRuta(String codigo){
+       String cad="";
+       for (Ruta r:myRutas){
+           if(r.getCodigo().equals(codigo)){
+               cad=(r.getOrigen()+","+r.getDestino()+","+r.getTarifab());
+               break;
+           }
+       }
+       return cad;
+   }
+   
     //REQUERIMIENTOS FUNCIONALES #1
     
     //Método para registar obejtos tipo Bus
@@ -88,12 +119,11 @@ public class Empresa {
     }
       
     //Método para registrar objetos tipo Ruta
-    public String registrarRuta(String origen,String destino,int tarifa){
-
+    public String registrarRuta(String origen,String destino,int tarifa, int viajeTime){
         String cad="";
         if(!validarRuta(origen,destino)){
         int contR=buscarCodUltimaRuta();
-        Ruta ruta=new Ruta(contR,origen,destino,tarifa);
+        Ruta ruta=new Ruta(contR,origen,destino,viajeTime,tarifa);
         myRutas.add(ruta);
         cad="Se registro la ruta: \n"+ myRutas.getLast().toString();
         }else{
@@ -105,14 +135,24 @@ public class Empresa {
     
     //Metodo para registrar objetos tipo salida
     public String registrarSalida(String fecha,String hora,String ruta,String bus){
-        for (Salida s:mySalidas){
+        if(validarSalidas(fecha,hora,ruta,bus)){
+        int viajeTime=0;
+        /*for (Salida s:mySalidas){
           if(s.getBusAsignado().equals(bus)&& s.getFecha().equals(fecha))  {
               return "El bus ya tiene una ruta asignada para esa fecha";
           }
+        }*/
+        for(Ruta r:myRutas){
+            if(r.getCodigo().equals(ruta)){
+                viajeTime=r.getViajeTime();
+            }
         }
         int cod=buscarCodUltimaSalida();
-        mySalidas.add(new Salida(cod,ruta,fecha,hora,bus));
+        mySalidas.add(new Salida(cod,ruta,fecha,hora,bus,viajeTime));
         return "Salida registrada\n"+ mySalidas.getLast().toString();
+    }else{
+            return "No se pudo registrar la salida";
+        }
     }
     
     
@@ -138,6 +178,34 @@ public class Empresa {
             }
         } 
         return retu;
+    }
+    
+    public boolean validarSalidas(String fecha,String hora,String ruta,String bus){
+    try{
+        SimpleDateFormat formato =new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        Date salidaNueva=null;
+        Date llegadaNueva=null;
+        for(Ruta r:myRutas){
+                    if (r.getCodigo().equals(ruta)){
+                     salidaNueva =formato.parse(fecha + " " + hora);
+                     Calendar cal = Calendar.getInstance();
+                     cal.setTime(salidaNueva);
+                     cal.add(Calendar.HOUR_OF_DAY, r.getViajeTime());
+                     llegadaNueva = cal.getTime();
+                    }
+                }
+        for(Salida s:mySalidas){
+            if(s.getBusAsignado().equals(bus)){
+            Date inicioExistente =formato.parse(s.getFecha() + " " + s.getHora());
+            Date finExistente =formato.parse(s.getFechaLlegada() + " " + s.getHoraLlegada());
+            if(salidaNueva.before(finExistente)&& llegadaNueva.after(inicioExistente)){
+                return false;
+            }
+            }
+        }
+        }catch(ParseException e){    
+        }
+     return true;
     }
     
     //Método para buscar el codigo de la última Ruta creada
@@ -192,12 +260,12 @@ public class Empresa {
             cad.append(s.toString()).append("\n");
         }
          if(cad.length()==0){
-            cad.append("No hay rutas registradas");
+            cad.append("No hay Salidas registradas");
          }
          return cad.toString();
     }
     
-    //
+    //Metodo para actualizar el estado de un bus
     public String actualizarBus(String placa,String nuevoEstado){
 
         for (Bus b:myBuses){
@@ -210,6 +278,7 @@ public class Empresa {
     return "Bus no encontrado";
 }
     
+    //Metodo para actualizar el valor de una ruta
     public String actualizarRuta(String cod,int nuevatarifa){
         try{for (Ruta r:myRutas){
             if (r.getCodigo().equals(cod)){
@@ -222,26 +291,5 @@ public class Empresa {
             return "Ingrese un valor válido";
         }
     }
-   public String retornarDatosbus(String placa){
-       String cad="";
-       for (Bus b:myBuses){
-           if(b.getPlaca().equals(placa)){
-               cad=(b.getTipoServ()+","+b.getEstado());
-               break;
-           }
-       }
-       return cad;
-   }
-   
-   public String retornarDatosRuta(String codigo){
-       String cad="";
-       for (Ruta r:myRutas){
-           if(r.getCodigo().equals(codigo)){
-               cad=(r.getOrigen()+","+r.getDestino()+","+r.getTarifab());
-               break;
-           }
-       }
-       return cad;
-   }
     
 }
