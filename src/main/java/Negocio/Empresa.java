@@ -136,6 +136,11 @@ public class Empresa {
     //Metodo para registrar objetos tipo salida
     public String registrarSalida(String fecha,String hora,String ruta,String bus){
         if(validarSalidas(fecha,hora,ruta,bus)){
+            for (Bus b:myBuses){
+                if (b.getPlaca().equals(bus)&& b.getEstado().equals("Mantenimiento")){
+                    return "El bus seleccionado esta en mantenimiento"; 
+                }
+            }
         int viajeTime=0;
         /*for (Salida s:mySalidas){
           if(s.getBusAsignado().equals(bus)&& s.getFecha().equals(fecha))  {
