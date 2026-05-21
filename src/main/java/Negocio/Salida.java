@@ -4,46 +4,38 @@
  */
 package Negocio;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 /**
  *
  * @author CAMILA ARIAS
  */
 public class Salida {
     private String idSalida;
-    private String ruta;
-    private String fecha;
-    private String hora;
-    private String busAsignado;
+    private Ruta ruta;
+    private LocalDate fechaSalida;
+    private LocalTime horaSalida;
+    private Bus busAsignado;
     private String estado;
-    private String fechaLlegada;
-    private String horaLlegada;
+    private LocalDate fechaLlegada;
+    private LocalTime horaLlegada;
     private double tarifa;
     
-    public Salida(int codSalida, String ruta, String fecha, String hora, String busAsignado, int rutaTime) {
-        String fechaLlegada="";
-        String horaLlegada="";
-        try{
-        String salidaComp=fecha+" "+hora;
-        SimpleDateFormat formato =new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        Date salida = formato.parse(salidaComp);
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(salida);
-        cal.add(Calendar.HOUR_OF_DAY, rutaTime);
-        Date llegada=cal.getTime();
-        SimpleDateFormat formatoFecha =new SimpleDateFormat("dd/MM/yyyy");
-        SimpleDateFormat formatoHora =new SimpleDateFormat("HH:mm");
-        fechaLlegada =formatoFecha.format(llegada);
-        horaLlegada =formatoHora.format(llegada);
-        }catch(ParseException e){
-          //Genera error si no se pone try-catch  
-        }
+    public Salida(int codSalida, Ruta ruta,LocalDateTime salida, LocalDateTime llegada, Bus busAsignado) {
+        
+        LocalDate fechaLlegada = llegada.toLocalDate();
+        LocalTime horaLlegada = llegada.toLocalTime();
+        LocalDate fechaSalida = salida.toLocalDate();
+        LocalTime horaSalida = salida.toLocalTime();
+        
         this.idSalida = generarCodigoSalida(codSalida);
         this.ruta = ruta;
-        this.fecha = fecha;
-        this.hora = hora;
+        this.fechaSalida = fechaSalida;
+        this.horaSalida = horaSalida;
         this.busAsignado = busAsignado;
         this.estado = "Programada";
         this.fechaLlegada= fechaLlegada;
@@ -55,77 +47,115 @@ public class Salida {
         return cod;
     }
     
+    
+    
     public String getIdSalida() {
         return idSalida;
     }
 
-    public String getRuta() {
+    public Ruta getRuta() {
         return ruta;
     }
 
-    public String getFecha() {
-        return fecha;
+    public LocalDate getFecha() {
+        return fechaSalida;
     }
 
-    public String getHora() {
-        return hora;
+    public LocalTime getHora() {
+        return horaSalida;
     }
 
-    public String getBusAsignado() {
+    public Bus getBusAsignado() {
         return busAsignado;
     }
+
+    public LocalDate getFechaLlegada() {
+        return fechaLlegada;
+    }
+
+    public double getTarifa() {
+        return tarifa;
+    }
+
 
     public String getEstado() {
         return estado;
     }
 
-    public String getFechaLlegada() {
-        return fechaLlegada;
-    }
-
-    public String getHoraLlegada() {
+    public LocalTime getHoraLlegada() {
         return horaLlegada;
     }
+    public LocalDateTime getFechaHoraSalida(){
+        return LocalDateTime.of(fechaSalida, horaSalida);
+    }
     
+     public LocalDateTime getFechaHoraLlegada(){
+         return LocalDateTime.of(fechaLlegada, horaLlegada);
+    }
 
     public void setIdSalida(String idSalida) {
         this.idSalida = idSalida;
     }
 
-    public void setRuta(String ruta) {
-        this.ruta = ruta;
+
+    public void setFecha(LocalDate fecha) {
+        this.fechaSalida = fecha;
     }
 
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
-    }
-
-    public void setHora(String hora) {
-        this.hora = hora;
-    }
-
-    public void setBusAsignado(String busAsignado) {
-        this.busAsignado = busAsignado;
+    public void setHora(LocalTime hora) {
+        this.horaSalida = hora;
     }
 
     public void setEstado(String estado) {
         this.estado = estado;
     }
 
-    public void setFechaLlegada(String fechaLlegada) {
+
+
+    public void setHoraLlegada(LocalTime horaLlegada) {
+        this.horaLlegada = horaLlegada;
+    }
+
+    public void setRuta(Ruta ruta) {
+        this.ruta = ruta;
+    }
+
+    public void setBusAsignado(Bus busAsignado) {
+        this.busAsignado = busAsignado;
+    }
+
+    public void setFechaLlegada(LocalDate fechaLlegada) {
         this.fechaLlegada = fechaLlegada;
     }
 
-    public void setHoraLlegada(String horaLlegada) {
-        this.horaLlegada = horaLlegada;
+    public void setTarifa(double tarifa) {
+        this.tarifa = tarifa;
     }
+    
     
 
     @Override
-    public String toString() {
-        return "Salida\nidSalida=" + idSalida + "\nRuta=" + ruta + "\nFechaSalida=" + fecha + 
-                "\nHoraSalida=" + hora + "\nBusAsignado=" + busAsignado +"\nFechaLlegada="+fechaLlegada+
-                "\nHoraLlegada="+horaLlegada +"\nEstado=" + estado+"\n";
-    }
+public String toString() {
+
+    DateTimeFormatter formatoFecha =
+            DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    DateTimeFormatter formatoHora =
+            DateTimeFormatter.ofPattern("HH:mm");
+
+    return "Salida\n" +
+            "idSalida=" + idSalida +
+            "\nRuta=" + ruta.getCodigo() +
+            "\nFechaSalida=" +
+            fechaSalida.format(formatoFecha) +
+            "\nHoraSalida=" +
+            horaSalida.format(formatoHora) +
+            "\nBusAsignado=" + busAsignado.getPlaca() +
+            "\nFechaLlegada=" +
+            fechaLlegada.format(formatoFecha) +
+            "\nHoraLlegada=" +
+            horaLlegada.format(formatoHora) +
+            "\nEstado=" + estado + "\n";
+}
     
 }

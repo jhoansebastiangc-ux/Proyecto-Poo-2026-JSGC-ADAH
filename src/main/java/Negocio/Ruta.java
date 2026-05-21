@@ -15,9 +15,9 @@ public class Ruta {
     private int viajeTime;
     private int Tarifab;
 
-    public Ruta(int cont,String origen, String destino,int viajeTime, int Tarifab) {
+    public Ruta(int cont, String destino,int viajeTime, int Tarifab) {
         this.codigo = generarCodigoRuta(cont);
-        this.origen = origen;
+        this.origen = "Cucúta";
         this.destino = destino;
         this.viajeTime=viajeTime;
         this.Tarifab = Tarifab;

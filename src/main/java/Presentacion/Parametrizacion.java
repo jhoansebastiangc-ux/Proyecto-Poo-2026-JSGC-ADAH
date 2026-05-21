@@ -21,14 +21,13 @@ public class Parametrizacion extends javax.swing.JFrame {
      * Creates new form Parametrizacion
      */
     private MenuPrincipal myPrincipal;
-    String [] ciudades={"Cucuta","Bucaramanga","Medellin","Cartagena"};
     public Parametrizacion(MenuPrincipal mp) {
         initComponents();    
         setLocationRelativeTo(null);
         this.myPrincipal=mp;
         cargarPlacas();
         cargarRutas();
-        cmdDestino.setEnabled(false);
+        cargarSalidas();
         
         javax.swing.JTextField txtFecha =(javax.swing.JTextField) cmdFechaS.getDateEditor().getUiComponent();
         txtFecha.setEditable(false);
@@ -52,7 +51,7 @@ public class Parametrizacion extends javax.swing.JFrame {
 
          cmdHoraS.setEditor(editorS);
          
-         SpinnerNumberModel modelo =new SpinnerNumberModel (1,1,999,1);
+         SpinnerNumberModel modelo =new SpinnerNumberModel (2,2,36,1);
 
          cmdHoraR.setModel(modelo);
          
@@ -112,7 +111,32 @@ public class Parametrizacion extends javax.swing.JFrame {
         }
     }
     }
+    private void cargarSalidas(){
+     String cad = this.myPrincipal.getMyEmpresa().cargarSalidas();
 
+    String[] salidas = cad.split(",");
+
+    for(String p : salidas){
+
+        boolean existe = false;
+
+        // recorrer combo box
+        for(int i = 0; i < cmdSalidaA.getItemCount(); i++){
+
+            String item = cmdSalidaA.getItemAt(i).toString();
+
+            if(item.equals(p)){
+                existe = true;
+                break;
+            }
+        }
+
+        // si no existe lo agrega
+        if(!existe){
+            cmdSalidaA.addItem(p);
+        }   
+    }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -157,11 +181,9 @@ public class Parametrizacion extends javax.swing.JFrame {
         jPanel6 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        cmdOrigen = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         txtTarifa = new javax.swing.JTextField();
-        cmdDestino = new javax.swing.JComboBox<>();
         cmdCrearR = new javax.swing.JButton();
         cmdListarR = new javax.swing.JButton();
         jScrollPane6 = new javax.swing.JScrollPane();
@@ -169,6 +191,8 @@ public class Parametrizacion extends javax.swing.JFrame {
         jLabel28 = new javax.swing.JLabel();
         cmdHoraR = new javax.swing.JSpinner();
         jLabel29 = new javax.swing.JLabel();
+        jTextField4 = new javax.swing.JTextField();
+        txtDestinoR = new javax.swing.JTextField();
         jPanel7 = new javax.swing.JPanel();
         cmdRutaA = new javax.swing.JComboBox<>();
         jLabel23 = new javax.swing.JLabel();
@@ -223,9 +247,13 @@ public class Parametrizacion extends javax.swing.JFrame {
         jLabel37 = new javax.swing.JLabel();
         txtOrigenS1 = new javax.swing.JTextField();
         txtDestinoS1 = new javax.swing.JTextField();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        txtFechaS = new javax.swing.JTextField();
+        txtHoraS = new javax.swing.JTextField();
+        txtRutaS = new javax.swing.JTextField();
+        jLabel38 = new javax.swing.JLabel();
+        cmdSalidaA = new javax.swing.JComboBox<>();
+        jLabel39 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
 
         jComboBox7.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -289,7 +317,7 @@ public class Parametrizacion extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(cmdListarB)))
                         .addGap(16, 16, 16)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE)))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)))
                 .addGap(18, 18, 18))
         );
         jPanel5Layout.setVerticalGroup(
@@ -388,7 +416,7 @@ public class Parametrizacion extends javax.swing.JFrame {
                         .addComponent(cmdActualizarEstado)
                         .addGap(18, 18, 18)
                         .addComponent(cmdListarBA)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40))
         );
@@ -447,19 +475,11 @@ public class Parametrizacion extends javax.swing.JFrame {
 
         jLabel4.setText("Origen");
 
-        cmdOrigen.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cucuta", "Bucaramanga", "Medellin", "Cartagena" }));
-        cmdOrigen.setSelectedIndex(-1);
-        cmdOrigen.addActionListener(this::cmdOrigenActionPerformed);
-
         jLabel5.setText("Destino");
 
         jLabel6.setText("Tarifa Base");
 
         txtTarifa.addActionListener(this::txtTarifaActionPerformed);
-
-        cmdDestino.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cucuta", "Bucaramanga", "Medellin", "Cartagena" }));
-        cmdDestino.setSelectedIndex(-1);
-        cmdDestino.addActionListener(this::cmdDestinoActionPerformed);
 
         cmdCrearR.setText("Crear");
         cmdCrearR.addActionListener(this::cmdCrearRActionPerformed);
@@ -474,6 +494,9 @@ public class Parametrizacion extends javax.swing.JFrame {
         jLabel28.setText("Tiempo de Viaje");
 
         jLabel29.setText("H");
+
+        jTextField4.setEditable(false);
+        jTextField4.setText("CUCÚTA");
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -502,19 +525,17 @@ public class Parametrizacion extends javax.swing.JFrame {
                         .addComponent(jLabel29))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(cmdOrigen, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addGap(61, 61, 61))
                             .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                                        .addComponent(jLabel5)
-                                        .addGap(61, 61, 61))
-                                    .addGroup(jPanel6Layout.createSequentialGroup()
-                                        .addComponent(jLabel6)
-                                        .addGap(45, 45, 45)))
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtTarifa, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cmdDestino, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                .addComponent(jLabel6)
+                                .addGap(45, 45, 45)))
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtTarifa, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField4)
+                            .addComponent(txtDestinoR, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(116, 116, 116))
@@ -526,12 +547,12 @@ public class Parametrizacion extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(cmdOrigen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(15, 15, 15)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(cmdDestino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(txtDestinoR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(21, 21, 21)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel28)
                     .addComponent(cmdHoraR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -771,8 +792,8 @@ public class Parametrizacion extends javax.swing.JFrame {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                        .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(97, 97, 97))))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -817,7 +838,7 @@ public class Parametrizacion extends javax.swing.JFrame {
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cmdCrearS)
                     .addComponent(cmdListarS))
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane4.addTab("Registrar", jPanel8);
@@ -858,11 +879,20 @@ public class Parametrizacion extends javax.swing.JFrame {
 
         txtDestinoS1.setEditable(false);
 
-        jTextField1.setText("jTextField1");
+        txtFechaS.setEditable(false);
 
-        jTextField2.setText("jTextField2");
+        txtHoraS.setEditable(false);
 
-        jTextField3.setText("jTextField3");
+        txtRutaS.setEditable(false);
+
+        jLabel38.setText("Salida");
+
+        cmdSalidaA.addActionListener(this::cmdSalidaAActionPerformed);
+
+        jLabel39.setText("Estado");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Programada" }));
+        jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
 
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
@@ -871,28 +901,33 @@ public class Parametrizacion extends javax.swing.JFrame {
             .addGroup(jPanel10Layout.createSequentialGroup()
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmdActualizar, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel10Layout.createSequentialGroup()
+                                .addGap(239, 239, 239)
+                                .addComponent(jLabel30)))
+                        .addGap(18, 18, 18)
+                        .addComponent(cmdListarSA))
+                    .addGroup(jPanel10Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel10Layout.createSequentialGroup()
                                 .addComponent(jLabel37)
-                                .addGap(450, 450, 450))
+                                .addGap(172, 172, 172)
+                                .addComponent(jLabel39)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(6, 6, 6))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
                                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(jLabel35, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jLabel34, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtCapacidadSalida1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cmdBus1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(300, 300, 300))))
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmdActualizar, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(cmdBus1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtCapacidadSalida1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(182, 182, 182))
                             .addGroup(jPanel10Layout.createSequentialGroup()
-                                .addGap(239, 239, 239)
-                                .addComponent(jLabel30))
-                            .addGroup(jPanel10Layout.createSequentialGroup()
-                                .addContainerGap()
                                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addGroup(jPanel10Layout.createSequentialGroup()
                                         .addComponent(jLabel36)
@@ -912,34 +947,40 @@ public class Parametrizacion extends javax.swing.JFrame {
                                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))))))
-                        .addGap(18, 18, 18)
-                        .addComponent(cmdListarSA)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addComponent(jScrollPane9, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
-                .addGap(48, 48, 48))
+                                                    .addComponent(txtRutaS, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(txtHoraS, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(txtFechaS, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel38)
+                                .addGap(18, 18, 18)
+                                .addComponent(cmdSalidaA, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(12, 12, 12)))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(141, 141, 141))
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel10Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel10Layout.createSequentialGroup()
                         .addComponent(jLabel30)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel31)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtFechaS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel38)
+                            .addComponent(cmdSalidaA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(15, 15, 15)
                         .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel32)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtHoraS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel33)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtRutaS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel36)
@@ -947,7 +988,9 @@ public class Parametrizacion extends javax.swing.JFrame {
                         .addGap(9, 9, 9)
                         .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel37)
-                            .addComponent(txtDestinoS1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtDestinoS1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel39)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(9, 9, 9)
                         .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -955,8 +998,7 @@ public class Parametrizacion extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel35, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtCapacidadSalida1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtCapacidadSalida1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cmdActualizar)
@@ -972,7 +1014,7 @@ public class Parametrizacion extends javax.swing.JFrame {
             .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel9Layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, 853, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(0, 0, Short.MAX_VALUE)))
         );
         jPanel9Layout.setVerticalGroup(
@@ -1012,15 +1054,13 @@ public class Parametrizacion extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 859, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(138, 138, 138)
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addGap(138, 138, 138)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 784, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(81, 81, 81))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1102,26 +1142,6 @@ public class Parametrizacion extends javax.swing.JFrame {
         
     }//GEN-LAST:event_cmdCrearBActionPerformed
 
-    private void cmdOrigenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdOrigenActionPerformed
-        // TODO add your handling code here:
-        String origen=cmdOrigen.getSelectedItem().toString();
-        
-        cmdDestino.removeAllItems();
-        
-        for (String c:ciudades){
-            
-            if (!c.equals(origen)){
-                
-                cmdDestino.addItem(c);
-                
-            }
-        }
-        
-       cmdDestino.setEnabled(true);
-
-        
-    }//GEN-LAST:event_cmdOrigenActionPerformed
-
     private void cmdListarBAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdListarBAActionPerformed
         String cad=this.myPrincipal.getMyEmpresa().listarBus();
         txtMostrar.setText(cad);
@@ -1148,23 +1168,18 @@ public class Parametrizacion extends javax.swing.JFrame {
      
     }//GEN-LAST:event_cmdPlacaActualizarActionPerformed
 
-    private void cmdDestinoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdDestinoActionPerformed
-
-    }//GEN-LAST:event_cmdDestinoActionPerformed
-
     private void cmdCrearRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCrearRActionPerformed
         // TODO add your handling code here:
         try{
         String text=txtTarifa.getText().trim();
         
-        if (this.cmdOrigen.getSelectedIndex()!=-1&& this.cmdDestino.getSelectedIndex()!=-1&& !text.isEmpty()){
+        if (!txtDestinoR.getText().isEmpty()&& !text.isEmpty()){
             
-        String origen=this.cmdOrigen.getSelectedItem().toString();
-        String destino=this.cmdDestino.getSelectedItem().toString();
+        String destino=txtDestinoR.getText();
         int viajeTime=(int)cmdHoraR.getValue();
         int tarifaB=Integer.parseInt(this.txtTarifa.getText());
         
-        String cad=this.myPrincipal.getMyEmpresa().registrarRuta(origen,destino,tarifaB,viajeTime);
+        String cad=this.myPrincipal.getMyEmpresa().registrarRuta(destino,tarifaB,viajeTime);
         
         this.txtMostrarR.setText(cad); 
         cargarRutas();
@@ -1287,6 +1302,14 @@ public class Parametrizacion extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_cmdActualizarActionPerformed
 
+    private void cmdSalidaAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSalidaAActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmdSalidaAActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cmdActualizar;
@@ -1297,7 +1320,6 @@ public class Parametrizacion extends javax.swing.JFrame {
     private javax.swing.JButton cmdCrearB;
     private javax.swing.JButton cmdCrearR;
     private javax.swing.JButton cmdCrearS;
-    private javax.swing.JComboBox<String> cmdDestino;
     private javax.swing.JComboBox<String> cmdEstadoActualizar;
     private com.toedter.calendar.JDateChooser cmdFechaS;
     private javax.swing.JSpinner cmdHoraR;
@@ -1308,13 +1330,14 @@ public class Parametrizacion extends javax.swing.JFrame {
     private javax.swing.JButton cmdListarRutasA;
     private javax.swing.JButton cmdListarS;
     private javax.swing.JButton cmdListarSA;
-    private javax.swing.JComboBox<String> cmdOrigen;
     private javax.swing.JTextField cmdPlaca;
     private javax.swing.JComboBox<String> cmdPlacaActualizar;
     private javax.swing.JComboBox<String> cmdRuta;
     private javax.swing.JComboBox<String> cmdRutaA;
+    private javax.swing.JComboBox<String> cmdSalidaA;
     private javax.swing.JTextField cmdTipoServActualizar;
     private javax.swing.JComboBox<String> cmdTipoServicio;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1347,6 +1370,8 @@ public class Parametrizacion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel36;
     private javax.swing.JLabel jLabel37;
+    private javax.swing.JLabel jLabel38;
+    private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -1373,16 +1398,17 @@ public class Parametrizacion extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTabbedPane jTabbedPane3;
     private javax.swing.JTabbedPane jTabbedPane4;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField txtCap;
     private javax.swing.JTextField txtCapacidadActualizar;
     private javax.swing.JTextField txtCapacidadSalida;
     private javax.swing.JTextField txtCapacidadSalida1;
     private javax.swing.JTextField txtDestino;
+    private javax.swing.JTextField txtDestinoR;
     private javax.swing.JTextField txtDestinoS;
     private javax.swing.JTextField txtDestinoS1;
+    private javax.swing.JTextField txtFechaS;
+    private javax.swing.JTextField txtHoraS;
     private javax.swing.JTextArea txtMostrar;
     private javax.swing.JTextArea txtMostrarBR;
     private javax.swing.JTextArea txtMostrarR;
@@ -1392,6 +1418,7 @@ public class Parametrizacion extends javax.swing.JFrame {
     private javax.swing.JTextField txtOrigen;
     private javax.swing.JTextField txtOrigenS;
     private javax.swing.JTextField txtOrigenS1;
+    private javax.swing.JTextField txtRutaS;
     private javax.swing.JTextField txtTarifa;
     private javax.swing.JTextField txtTarifaA;
     // End of variables declaration//GEN-END:variables
