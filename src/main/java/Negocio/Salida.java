@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 /**
  *
  * @author CAMILA ARIAS
@@ -24,22 +25,19 @@ public class Salida {
     private LocalDate fechaLlegada;
     private LocalTime horaLlegada;
     private double tarifa;
+    private ArrayList<Tiquete> myTiquetes;
     
     public Salida(int codSalida, Ruta ruta,LocalDateTime salida, LocalDateTime llegada, Bus busAsignado) {
-        
-        LocalDate fechaLlegada = llegada.toLocalDate();
-        LocalTime horaLlegada = llegada.toLocalTime();
-        LocalDate fechaSalida = salida.toLocalDate();
-        LocalTime horaSalida = salida.toLocalTime();
-        
         this.idSalida = generarCodigoSalida(codSalida);
         this.ruta = ruta;
-        this.fechaSalida = fechaSalida;
-        this.horaSalida = horaSalida;
+        this.fechaSalida = salida.toLocalDate();
+        this.horaSalida = salida.toLocalTime();
         this.busAsignado = busAsignado;
         this.estado = "Programada";
-        this.fechaLlegada= fechaLlegada;
-        this.horaLlegada= horaLlegada;
+        this.fechaLlegada= llegada.toLocalDate();
+        this.horaLlegada= llegada.toLocalTime();
+        this.tarifa=calcularTarifa();
+        this.myTiquetes=new ArrayList<>();
     }
     
     private String generarCodigoSalida(int codSalida){
@@ -47,7 +45,13 @@ public class Salida {
         return cod;
     }
     
-    
+    private double calcularTarifa(){
+        double tarifa=ruta.getTarifab();
+        if(busAsignado.getTipoServ().equals("Ejecutivo")){
+            tarifa*=1.20;
+        }
+        return tarifa;
+    }
     
     public String getIdSalida() {
         return idSalida;
@@ -155,7 +159,8 @@ public String toString() {
             fechaLlegada.format(formatoFecha) +
             "\nHoraLlegada=" +
             horaLlegada.format(formatoHora) +
-            "\nEstado=" + estado + "\n";
+            "\nEstado=" + estado +
+            "\nTarifa="+tarifa+"\n";
 }
     
 }

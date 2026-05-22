@@ -54,6 +54,32 @@ public class Empresa {
         return cad.toString();
     }
     
+    public String cargarSalidasVenta(){
+        StringBuilder cad=new StringBuilder();
+        for (Salida s:mySalidas){
+            if(!s.getEstado().equals("Cancelada")){
+                for (Puesto p:s.getBusAsignado().getMyPuestos()){
+                    if(p.isOcupado().equals("Disponible")){
+                    break;
+                    }
+                }
+              cad.append(s.getIdSalida()).append(",");  
+            }
+        }
+        return cad.toString();
+    }
+    
+    public String cargarAsientos(String codSalida){
+        Salida s=recorrerSalida(codSalida);
+        StringBuilder cad=new StringBuilder();
+        for(Puesto p:s.getBusAsignado().getMyPuestos()){
+            if(p.isOcupado().equals("Disponible")){
+                cad.append("Asiento: "+p.getNumAsiento()).append(",");
+            }
+        }
+        return cad.toString();
+    }
+    
     //Métodos para la creación de los objetos por default    
     private void registrarDatosBase(){
         registrarBusesBase();
@@ -132,6 +158,15 @@ public class Empresa {
        }
        return null;
    }
+      
+      private Salida recorrerSalida(String salida){
+          for (Salida s:mySalidas){
+              if(s.getIdSalida().equals(salida)){
+                  return s;
+              }
+          }
+          return null;
+      }
     //REQUERIMIENTOS FUNCIONALES #1
     
     //Método para registar obejtos tipo Bus
@@ -214,18 +249,18 @@ public class Empresa {
     
 private boolean validarSalidas(LocalDateTime salida,Ruta ruta,Bus bus){
 
-    LocalDateTime llegadaNueva =
-            calcularLlegada(salida, ruta);
+    LocalDateTime llegadaNueva =calcularLlegada(salida, ruta);
+    llegadaNueva=llegadaNueva.plusHours(ruta.getViajeTime());
 
     for(Salida s : mySalidas){
 
         if(s.getBusAsignado().equals(bus)){
 
-            LocalDateTime salidaExistente =
-                    s.getFechaHoraSalida();
+            LocalDateTime salidaExistente = s.getFechaHoraSalida();
 
-            LocalDateTime llegadaExistente =
-                    s.getFechaHoraLlegada();
+            LocalDateTime llegadaExistente= s.getFechaHoraLlegada();
+            
+            llegadaExistente =llegadaExistente.plusHours(s.getRuta().getViajeTime());
 
             // Verifica cruce de horarios
             if(salida.isBefore(llegadaExistente)
