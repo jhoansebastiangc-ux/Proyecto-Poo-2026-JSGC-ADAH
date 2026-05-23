@@ -68,12 +68,25 @@ public class Empresa {
         }
         return cad.toString();
     }
+    public String cargarDatosSalida(String salida){
+        
+        StringBuilder cad=new StringBuilder();
+        Salida s=recorrerSalida(salida);
+        if(s == null){
+            return "";
+        }
+        Ruta r=s.getRuta();
+        cad.append(r.getOrigen()).append(",").append(r.getDestino()).append(",").append(s.getFecha().format(DateTimeFormatter.ISO_DATE))
+                .append(",").append(s.getHora().format(DateTimeFormatter.ofPattern("HH:mm"))).append(",").append(s.getBusAsignado().getPlaca()).append(",")
+                .append(s.getBusAsignado().getTipoServ());
+        return cad.toString();
+    }
     
     public String cargarAsientos(String codSalida){
         Salida s=recorrerSalida(codSalida);
         StringBuilder cad=new StringBuilder();
         for(Puesto p:s.getBusAsignado().getMyPuestos()){
-            if(p.isOcupado().equals("Disponible")){
+            if(!s.puestoOcupado(p.getNumAsiento())){
                 cad.append("Asiento: "+p.getNumAsiento()).append(",");
             }
         }
@@ -218,6 +231,15 @@ public class Empresa {
     }else{
             return "No se pudo registrar la salida\nEl bus seleccionado tiene otra salida para ese horario";
         }
+    }
+    
+    public String registrarTiquete(String salida, int asiento, String nombre, String documento){
+       Salida s=recorrerSalida(salida);
+       Bus b=s.getBusAsignado();
+       Puesto puesto=b.buscarPuesto(asiento);
+       double valorPagar=s.getTarifa();
+       String cad=s.registrarTiquete(nombre,documento,puesto,valorPagar);
+        return cad;
     }
     
     

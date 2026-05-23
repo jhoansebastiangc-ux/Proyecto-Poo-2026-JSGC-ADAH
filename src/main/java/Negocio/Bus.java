@@ -35,6 +35,15 @@ public class Bus {
     }
     }
     
+    public Puesto buscarPuesto(int puesto){
+        for(Puesto p:this.myPuestos){
+            if(p.getNumAsiento()==puesto){
+                return p;
+            }
+        }
+        return null;
+    }
+    
 
     public String getPlaca() {
         return placa;

@@ -39,6 +39,23 @@ public class Salida {
         this.tarifa=calcularTarifa();
         this.myTiquetes=new ArrayList<>();
     }
+    public String registrarTiquete(String nombre, String documento, Puesto myPuesto, double valorPagar){
+        Tiquete t=new Tiquete(nombre,documento,myPuesto, valorPagar);
+        this.myTiquetes.add(t);
+        return myTiquetes.getLast().toString();
+    }
+    
+    public boolean puestoOcupado(int numPuesto){
+
+    for(Tiquete t : myTiquetes){
+
+        if(t.getMyPuesto().getNumAsiento() == numPuesto){
+            return true;
+        }
+    }
+
+    return false;
+}
     
     private String generarCodigoSalida(int codSalida){
         String cod=String.format("S%03d",codSalida);
@@ -113,8 +130,6 @@ public class Salida {
     public void setEstado(String estado) {
         this.estado = estado;
     }
-
-
 
     public void setHoraLlegada(LocalTime horaLlegada) {
         this.horaLlegada = horaLlegada;
