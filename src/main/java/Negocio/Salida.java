@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Negocio;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -11,10 +7,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-/**
- *
- * @author CAMILA ARIAS
- */
+
+
 public class Salida {
     private String idSalida;
     private Ruta ruta;

@@ -1,20 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Negocio;
 import java.util.ArrayList;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Calendar;
-import java.text.ParseException;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-/**
- *
- * @author CAMILA ARIAS
- */
+
+
 public class Empresa {
     private ArrayList<Bus> myBuses;
     private ArrayList<Ruta> myRutas;
@@ -46,6 +35,8 @@ public class Empresa {
         return cad.toString();
     }
     
+
+    //Metodo usado para cargar las salidas dentro de un comboBox
     public String cargarSalidas(){
         StringBuilder cad=new StringBuilder();
         for(Salida s:mySalidas){
@@ -54,12 +45,13 @@ public class Empresa {
         return cad.toString();
     }
     
+    // Método para cargar las salidas disponibles para venta
     public String cargarSalidasVenta(){
         StringBuilder cad=new StringBuilder();
         for (Salida s:mySalidas){
             if(!s.getEstado().equals("Cancelada")){
                 for (Puesto p:s.getBusAsignado().getMyPuestos()){
-                    if(p.isOcupado().equals("Disponible")){
+                    if(p.getEstado().equals("Disponible")){
                     break;
                     }
                 }
@@ -68,6 +60,8 @@ public class Empresa {
         }
         return cad.toString();
     }
+    
+    // Método para cargar la información de una salida
     public String cargarDatosSalida(String salida){
         
         StringBuilder cad=new StringBuilder();
@@ -81,7 +75,8 @@ public class Empresa {
                 .append(s.getBusAsignado().getTipoServ());
         return cad.toString();
     }
-    
+
+    // Método para cargar los asientos disponibles de una salida
     public String cargarAsientos(String codSalida){
         Salida s=recorrerSalida(codSalida);
         StringBuilder cad=new StringBuilder();
@@ -128,33 +123,33 @@ public class Empresa {
         mySalidas.add(new Salida(6,myRutas.get(2),LocalDateTime.of(2026,3,17,18,0),calcularLlegada(LocalDateTime.of(2026,3,17,18,0),myRutas.get(2)),myBuses.getFirst()));
         mySalidas.add(new Salida(7,myRutas.get(3),LocalDateTime.of(2026,3,18,6,30),calcularLlegada(LocalDateTime.of(2026,3,18,6,30),myRutas.get(3)),myBuses.get(2)));
         mySalidas.add(new Salida(8,myRutas.get(3),LocalDateTime.of(2026,3,19,19,30),calcularLlegada(LocalDateTime.of(2026,3,19,19,30),myRutas.get(3)),myBuses.get(1)));
+
     }
     
-        //Metodo Usado para retornar los datos que tenga un bus
-   public String retornarDatosbus(String placa){
-       String cad="";
-       for (Bus b:myBuses){
-           if(b.getPlaca().equals(placa)){
-               cad=(b.getTipoServ()+","+b.getEstado());
-               break;
-           }
+    // Método para retornar la información de un bus
+    public String retornarDatosbus(String placa){
+     Bus b = recorrerBus(placa);
+
+       if(b == null){
+        return "";
        }
-       return cad;
+
+      return b.getTipoServ() + "," + b.getEstado();
    }
    
-    //Metodo Usado para retornar los datos que tenga una ruta
-   public String retornarDatosRuta(String codigo){
-       String cad="";
-       for (Ruta r:myRutas){
-           if(r.getCodigo().equals(codigo)){
-               cad=(r.getOrigen()+","+r.getDestino()+","+r.getTarifab());
-               break;
-           }
-       }
-       return cad;
-   }
+    // Método para retornar la información de una ruta
+    public String retornarDatosRuta(String codigo){
+     Ruta r = recorrerRuta(codigo);
+     if (r == null){
+         return "";
+     }
+  return r.getOrigen() + ","
+            + r.getDestino() + ","
+            + r.getTarifab();
+}
    
-   private Bus recorrerBus(String placa){
+    // Método para buscar un bus por placa
+    private Bus recorrerBus(String placa){
        for(Bus b:myBuses){
            if (b.getPlaca().equals(placa)){
                return b;
@@ -163,7 +158,8 @@ public class Empresa {
        return null;
    }
    
-      private Ruta recorrerRuta(String ruta){
+    // Método para buscar una ruta por código
+    private Ruta recorrerRuta(String ruta){
        for(Ruta r:myRutas){
            if (r.getCodigo().equals(ruta)){
                return r;
@@ -172,7 +168,8 @@ public class Empresa {
        return null;
    }
       
-      private Salida recorrerSalida(String salida){
+    // Método para buscar una salida por código
+    private Salida recorrerSalida(String salida){
           for (Salida s:mySalidas){
               if(s.getIdSalida().equals(salida)){
                   return s;
@@ -180,6 +177,19 @@ public class Empresa {
           }
           return null;
       }
+    
+    //Método para convertir la Fecha y Hora
+    private LocalDateTime convertirFechaHora(String fecha,String hora){
+     DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    
+     return LocalDateTime.parse(fecha + " " + hora, formato);
+  }
+    
+    //Método para verificar si un Bus se encuentra en mantenimiento
+    private boolean revisarbusEnMantenimiento(Bus bus){
+     return bus.getEstado().equals("Mantenimiento");
+  }
+    
     //REQUERIMIENTOS FUNCIONALES #1
     
     //Método para registar obejtos tipo Bus
@@ -211,26 +221,25 @@ public class Empresa {
     
     //Metodo para registrar objetos tipo salida
     public String registrarSalida(String fecha,String hora,String codRuta,String placaBus){
-      DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-      String salidaTexto = fecha + " " + hora;
-      LocalDateTime salida = LocalDateTime.parse(salidaTexto, formato);
-      
-      Bus bus=recorrerBus(placaBus);
-      Ruta ruta=recorrerRuta(codRuta);
-      LocalDateTime llegada=calcularLlegada(salida,ruta);
-              
-        if(!validarSalidas(salida,ruta,bus)){
-            for (Bus b:myBuses){
-                if (b.getPlaca().equals(placaBus)&& b.getEstado().equals("Mantenimiento")){
-                    return "El bus seleccionado esta en mantenimiento"; 
-                }
-            }
-        int cod=buscarCodUltimaSalida();
-        mySalidas.add(new Salida(cod,ruta,salida,llegada,bus));
-        return "Salida registrada\n"+ mySalidas.getLast().toString();
-    }else{
-            return "No se pudo registrar la salida\nEl bus seleccionado tiene otra salida para ese horario";
-        }
+     LocalDateTime salida =convertirFechaHora(fecha,hora);
+
+    Bus bus = recorrerBus(placaBus);
+    Ruta ruta = recorrerRuta(codRuta);
+    LocalDateTime llegada = calcularLlegada(salida,ruta);
+
+    if(revisarbusEnMantenimiento(bus)){
+        return "El bus seleccionado está en mantenimiento";
+    }
+
+    if(validarSalidas(salida, ruta, bus)){
+
+        return "No se pudo registrar la salida\n" + "El bus tiene otra salida";
+    }
+
+    int cod = buscarCodUltimaSalida();
+    mySalidas.add(new Salida(cod, ruta, salida, llegada, bus));
+
+      return "Salida registrada\n" + mySalidas.getLast();
     }
     
     public String registrarTiquete(String salida, int asiento, String nombre, String documento){
@@ -267,9 +276,9 @@ public class Empresa {
         return retu;
     }
     
-    
-    
-private boolean validarSalidas(LocalDateTime salida,Ruta ruta,Bus bus){
+
+    //Método para la validación de las Salidas
+    private boolean validarSalidas(LocalDateTime salida,Ruta ruta,Bus bus){
 
     LocalDateTime llegadaNueva =calcularLlegada(salida, ruta);
     llegadaNueva=llegadaNueva.plusHours(ruta.getViajeTime());
@@ -296,6 +305,8 @@ private boolean validarSalidas(LocalDateTime salida,Ruta ruta,Bus bus){
     return false;
 }
 
+    
+    // Método para calcular la fecha y hora de llegada
     private LocalDateTime calcularLlegada(LocalDateTime salida,Ruta ruta){
     LocalDateTime llegada = salida.plusHours(ruta.getViajeTime());
     return llegada;
@@ -361,15 +372,12 @@ private boolean validarSalidas(LocalDateTime salida,Ruta ruta,Bus bus){
     
     //Metodo para actualizar el estado de un bus
     public String actualizarBus(String placa,String nuevoEstado){
-
-        for (Bus b:myBuses){
-            if (b.getPlaca().equals(placa)){
-                b.setEstado(nuevoEstado);
-                return "Estado actualizado correctamente";
-            }
-        }
-
-    return "Bus no encontrado";
+     Bus b = recorrerBus(placa);
+     if (b == null){
+         return "Bus no encontrado";
+     }
+     b.setEstado(nuevoEstado);
+     return "Estado actualizado correctamente";
 }
     
     //Metodo para actualizar el valor de una ruta
@@ -386,4 +394,27 @@ private boolean validarSalidas(LocalDateTime salida,Ruta ruta,Bus bus){
         }
     }
     
+    //Método para actualizar el estado de un Asiento
+    public String actualizarAsiento(String placaBus,int numeroAsiento,String nuevoEstado){
+    Bus bus = recorrerBus(placaBus);
+       if(bus == null){
+         return "Bus no encontrado";
+      }
+       
+    Puesto puesto = bus.buscarPuesto(numeroAsiento);
+       if(puesto == null){
+        return "Asiento no encontrado";
+      }
+
+    // Validar estado permitido
+    if(!nuevoEstado.equals("Disponible")
+            && !nuevoEstado.equals("Ocupado")
+            && !nuevoEstado.equals("Mantenimiento")){
+
+        return "Estado inválido";
+    }
+
+    puesto.setEstado(nuevoEstado);
+    return "Estado del asiento actualizado correctamente";
+  }
 }

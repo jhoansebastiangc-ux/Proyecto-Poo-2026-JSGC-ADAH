@@ -1,13 +1,25 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Negocio;
 import java.util.Date;
-/**
- *
- * @author CAMILA ARIAS
- */
-public class Cliente {
-    private Date registro;
-}
+
+public class Cliente extends Persona {
+    
+private Date registro;
+
+  public Cliente(String documento, String nombre, Date registro){
+      super(documento, nombre);
+      this.registro = registro;
+  }
+
+    public Date getRegistro() {
+        return registro;
+    }
+
+    public void setRegistro(Date registro) {
+        this.registro = registro;
+    }
+
+    @Override
+    public String toString() {
+        return "Cliente{" + "registro=" + registro + '}';
+    }
+  }
