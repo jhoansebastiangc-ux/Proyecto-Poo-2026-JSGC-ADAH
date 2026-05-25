@@ -124,6 +124,28 @@ public class Empresa {
         return cad.toString();
     }
     
+    //Método para cargar los datos de una salida en Cancelación
+    public String cargarCancelacion(String codSalida){
+        Salida s = recorrerSalida(codSalida);
+
+        if(s == null){
+             return "";
+    }
+    StringBuilder cad = new StringBuilder();
+
+    cad.append(s.getRuta().getCodigo()).append(",")
+       .append(s.getRuta().getOrigen()).append(",")
+       .append(s.getRuta().getDestino()).append(",")
+       .append(s.getFecha()).append(",")
+       .append(s.getHora()).append(",")
+       .append(s.getBusAsignado().getPlaca()).append(",")
+       .append(s.getBusAsignado().getTipoServ()).append(",")
+       .append(s.getConductorAsignado().getNombre()).append(",")
+       .append(s.getMyTiquetes().size());
+
+    return cad.toString();
+    }
+    
     //Métodos para la creación de los objetos por default    
     private void registrarDatosBase(){
         registrarBusesBase();
@@ -317,6 +339,10 @@ public class Empresa {
     if(validarSalidas(salida, ruta, bus)){
 
         return "No se pudo registrar la salida\nEl bus tiene otra salida";
+    }
+    
+    if(validarConductor(salida, ruta, conductor)){
+        return "No se pudo registrar la salida\nEl conductor ya tiene una salida en ese horario";
     }
 
     int cod = buscarCodUltimaSalida();
@@ -528,6 +554,21 @@ private int buscarSillaDisponible(Salida s){
 
     return false;
  }
+    
+    //Método para la validación de los conductores
+    private boolean validarConductor(LocalDateTime salida, Ruta ruta, Conductor conductor ){
+        LocalDateTime llegadaNueva = calcularLlegada(salida, ruta);
+        for (Salida s :mySalidas){
+            if(s.getConductorAsignado().equals(conductor)){
+                LocalDateTime salidaExistente = s.getFechaHoraSalida();
+                LocalDateTime llegadaExistente = s.getFechaHoraLlegada();
+                if (salida.isBefore(llegadaExistente)&& llegadaNueva.isAfter(salidaExistente)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     
     // Método para calcular la fecha y hora de llegada
     private LocalDateTime calcularLlegada(LocalDateTime salida,Ruta ruta){

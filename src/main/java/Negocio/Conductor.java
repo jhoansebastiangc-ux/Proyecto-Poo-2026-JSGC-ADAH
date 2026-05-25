@@ -10,17 +10,17 @@ private Date fechaContratacion;
         this.fechaContratacion = fechaContratacion;
     }
 
-    public Date getYearContrat() {
+    public Date getFechaContratacion() {
         return fechaContratacion;
     }
 
-    public void setYearContrat(Date yearContrat) {
-        this.fechaContratacion = yearContrat;
+    public void setFechaContratacion(Date fechaContratacion) {
+        this.fechaContratacion = fechaContratacion;
     }
 
     @Override
     public String toString() {
-        return super.toString() +
-               "\nAño contratación: " + fechaContratacion;
+        return "Conductor{" + "fechaContratacion=" + fechaContratacion + '}';
     }
+
 }
