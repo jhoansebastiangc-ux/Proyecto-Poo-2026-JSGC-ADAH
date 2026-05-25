@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Presentacion;
+import Negocio.Conductor;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
@@ -28,6 +29,7 @@ public class Parametrizacion extends javax.swing.JFrame {
         cargarPlacas();
         cargarRutas();
         cargarSalidas();
+        cargarConductores();
         
         javax.swing.JTextField txtFecha =(javax.swing.JTextField) cmdFechaS.getDateEditor().getUiComponent();
         txtFecha.setEditable(false);
@@ -112,7 +114,7 @@ public class Parametrizacion extends javax.swing.JFrame {
     }
     }
     private void cargarSalidas(){
-     String cad = this.myPrincipal.getMyEmpresa().cargarSalidas();
+    String cad = this.myPrincipal.getMyEmpresa().cargarSalidas();
 
     String[] salidas = cad.split(",");
 
@@ -136,6 +138,33 @@ public class Parametrizacion extends javax.swing.JFrame {
             cmdSalidaA.addItem(p);
         }   
     }
+    }
+    
+    private void cargarConductores(){
+    String cad = this.myPrincipal.getMyEmpresa().cargarConductores();
+
+    String[] conductores = cad.split(",");
+
+    for(String p : conductores){
+
+        boolean existe = false;
+
+        // recorrer combo box
+        for(int i = 0; i < cmdConductor.getItemCount(); i++){
+
+            String item = cmdConductor.getItemAt(i).toString();
+
+            if(item.equals(p)){
+                existe = true;
+                break;
+            }
+        }
+
+        // si no existe lo agrega
+        if(!existe){
+            cmdConductor.addItem(p);
+        }   
+    }    
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -229,6 +258,8 @@ public class Parametrizacion extends javax.swing.JFrame {
         jLabel22 = new javax.swing.JLabel();
         txtOrigenS = new javax.swing.JTextField();
         txtDestinoS = new javax.swing.JTextField();
+        jLabel40 = new javax.swing.JLabel();
+        cmdConductor = new javax.swing.JComboBox<>();
         jPanel9 = new javax.swing.JPanel();
         jPanel10 = new javax.swing.JPanel();
         jLabel30 = new javax.swing.JLabel();
@@ -741,15 +772,14 @@ public class Parametrizacion extends javax.swing.JFrame {
 
         txtDestinoS.setEditable(false);
 
+        jLabel40.setText("Conductor Asignado");
+
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addGap(306, 306, 306)
-                        .addComponent(cmdCrearS))
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(jPanel8Layout.createSequentialGroup()
                             .addComponent(jLabel8)
@@ -777,23 +807,30 @@ public class Parametrizacion extends javax.swing.JFrame {
                                 .addComponent(jLabel11)))
                         .addGap(47, 47, 47)
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cmdFechaS, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cmdHoraS, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cmdRuta, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtOrigenS)
-                            .addComponent(txtDestinoS, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtDestinoS, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
+                            .addComponent(cmdFechaS, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel13)))
+                        .addComponent(jLabel13))
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addComponent(jLabel40)
+                        .addGap(18, 18, 18)
+                        .addComponent(cmdConductor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(56, 56, 56)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmdListarS)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
                         .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(97, 97, 97))))
+                        .addGap(97, 97, 97))
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(cmdCrearS)
+                        .addGap(32, 32, 32)
+                        .addComponent(cmdListarS)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -829,16 +866,20 @@ public class Parametrizacion extends javax.swing.JFrame {
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cmdBus, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtCapacidadSalida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmdCrearS)
-                    .addComponent(cmdListarS))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(cmdCrearS)
+                        .addComponent(cmdListarS))
+                    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel40, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cmdConductor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(58, Short.MAX_VALUE))
         );
 
         jTabbedPane4.addTab("Registrar", jPanel8);
@@ -1019,7 +1060,7 @@ public class Parametrizacion extends javax.swing.JFrame {
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 325, Short.MAX_VALUE)
+            .addGap(0, 356, Short.MAX_VALUE)
             .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel9Layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -1040,8 +1081,8 @@ public class Parametrizacion extends javax.swing.JFrame {
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jTabbedPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jTabbedPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jTabbedPane2.addTab("Salidas", jPanel3);
@@ -1068,7 +1109,7 @@ public class Parametrizacion extends javax.swing.JFrame {
                 .addGap(14, 14, 14)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                .addComponent(jTabbedPane2)
                 .addContainerGap())
         );
 
@@ -1090,7 +1131,8 @@ public class Parametrizacion extends javax.swing.JFrame {
         String hora=formatoH.format(cmdHoraS.getValue());
         String ruta=cmdRuta.getSelectedItem().toString();
         String bus=cmdBus.getSelectedItem().toString();
-        String cad=this.myPrincipal.getMyEmpresa().registrarSalida(fecha,hora,ruta,bus);
+        String conductor= cmdConductor.getSelectedItem().toString();
+        String cad=this.myPrincipal.getMyEmpresa().registrarSalida(fecha,hora,ruta,bus,conductor);
           txtMostrarSr.setText(cad);  
         }else{
             txtMostrarSr.setText("Digite una fecha");
@@ -1317,6 +1359,7 @@ public class Parametrizacion extends javax.swing.JFrame {
     private javax.swing.JButton cmdActualizarR;
     private javax.swing.JComboBox<String> cmdBus;
     private javax.swing.JComboBox<String> cmdBus1;
+    private javax.swing.JComboBox<String> cmdConductor;
     private javax.swing.JButton cmdCrearB;
     private javax.swing.JButton cmdCrearR;
     private javax.swing.JButton cmdCrearS;
@@ -1373,6 +1416,7 @@ public class Parametrizacion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel38;
     private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel40;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;

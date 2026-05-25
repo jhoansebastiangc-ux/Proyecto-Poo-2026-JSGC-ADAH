@@ -96,17 +96,17 @@ public class FrmVentaDePasajes extends javax.swing.JFrame {
         cmdListar.setText("Listar");
         cmdListar.addActionListener(this::cmdListarActionPerformed);
 
-        jLabel8.setText("Fecha Salida");
+        jLabel8.setText("Fecha Salida:");
 
         txtFecha.setEditable(false);
 
         txtHora.setEditable(false);
 
-        jLabel9.setText("Hora Salida");
+        jLabel9.setText("Hora Salida:");
 
         txtBus.setEditable(false);
 
-        jLabel10.setText("Bus Salida");
+        jLabel10.setText("Bus Salida:");
 
         jLabel11.setText("Tipo de bus");
 
@@ -291,6 +291,9 @@ public class FrmVentaDePasajes extends javax.swing.JFrame {
 
     private void cmdListarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdListarActionPerformed
         // TODO add your handling code here:
+        String salida=cmdSalidas.getSelectedItem().toString();
+        String cad=this.myPrincipal.getMyEmpresa().listarTiquetes(salida);
+        txtMostrarS.setText(cad);
     }//GEN-LAST:event_cmdListarActionPerformed
 
     private void cmdVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdVenderActionPerformed

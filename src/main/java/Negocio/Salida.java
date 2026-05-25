@@ -20,24 +20,62 @@ public class Salida {
     private LocalTime horaLlegada;
     private double tarifa;
     private ArrayList<Tiquete> myTiquetes;
+    private Conductor conductorAsignado;
     
-    public Salida(int codSalida, Ruta ruta,LocalDateTime salida, LocalDateTime llegada, Bus busAsignado) {
+    public Salida(int codSalida, Ruta ruta,LocalDateTime salida, LocalDateTime llegada, Bus busAsignado, Conductor conductorAsignado) {
         this.idSalida = generarCodigoSalida(codSalida);
         this.ruta = ruta;
         this.fechaSalida = salida.toLocalDate();
         this.horaSalida = salida.toLocalTime();
         this.busAsignado = busAsignado;
+        this.conductorAsignado = conductorAsignado;
         this.estado = "Programada";
         this.fechaLlegada= llegada.toLocalDate();
         this.horaLlegada= llegada.toLocalTime();
         this.tarifa=calcularTarifa();
         this.myTiquetes=new ArrayList<>();
     }
-    public String registrarTiquete(String nombre, String documento, Puesto myPuesto, double valorPagar){
-        Tiquete t=new Tiquete(nombre,documento,myPuesto, valorPagar);
+    public String registrarTiquete(Salida salida,String nombre, String documento, Puesto myPuesto, double valorPagar){
+        int cod=buscarCodUltimoTq();
+        Tiquete t=new Tiquete(cod,nombre,documento,myPuesto, valorPagar);
         this.myTiquetes.add(t);
-        return myTiquetes.getLast().toString();
+        return "Tiquete vendido con exito:\nTiquete:"+myTiquetes.getLast().getCodTq()+"\nPasajero: "+myTiquetes.getLast().getDocumento()+"---"+myTiquetes.getLast().getNombre()
+                +"\nSalida:"+salida.getIdSalida()+"("+salida.getRuta().getOrigen()+"--->"+salida.getRuta().getDestino()
+                +")"+salida.getFecha()+"   "+salida.getHora()+"\nBus: "+salida.getBusAsignado().getPlaca()
+                +"  "+"("+salida.getBusAsignado().getTipoServ()+")  Capacidad: "+salida.getBusAsignado().getMyPuestos().length
+                +"\nSilla: "+myPuesto.getNumAsiento()+"\nValor Pagado: $"+valorPagar+"\nEstado del tiquete: "+t.getEstado();
     }
+    
+    private int buscarCodUltimoTq(){
+        if(this.myTiquetes.isEmpty()){
+            return 0;
+        }
+        String cod=this.myTiquetes.getLast().getCodTq();
+        int numCod=Integer.parseInt(cod.substring(3));
+        return numCod;
+    }
+    public boolean hayAsientosDisponibles(){
+
+    for(Puesto p : this.busAsignado.getMyPuestos()){
+
+        if(!puestoOcupado(p.getNumAsiento())){
+            return true;
+        }
+    }
+
+    return false;
+}
+    public Puesto buscarPrimerAsientoLibre(){
+
+    for(Puesto p : busAsignado.getMyPuestos()){
+
+        if(!puestoOcupado(p.getNumAsiento())){
+            return p;
+        }
+    }
+
+    return null;
+}
     
     public boolean puestoOcupado(int numPuesto){
 
@@ -108,6 +146,15 @@ public class Salida {
          return LocalDateTime.of(fechaLlegada, horaLlegada);
     }
 
+    public ArrayList<Tiquete> getMyTiquetes() {
+        return myTiquetes;
+    }
+
+    public Conductor getConductorAsignado() {
+        return conductorAsignado;
+    }
+     
+
     public void setIdSalida(String idSalida) {
         this.idSalida = idSalida;
     }
@@ -144,6 +191,10 @@ public class Salida {
     public void setTarifa(double tarifa) {
         this.tarifa = tarifa;
     }
+
+    public void setConductorAsignado(Conductor conductorAsignado) {
+        this.conductorAsignado = conductorAsignado;
+    }
     
     
 
@@ -169,7 +220,8 @@ public String toString() {
             "\nHoraLlegada=" +
             horaLlegada.format(formatoHora) +
             "\nEstado=" + estado +
-            "\nTarifa="+tarifa+"\n";
+            "\nTarifa="+tarifa +
+            "\nConductor="+conductorAsignado.getNombre();
 }
     
 }

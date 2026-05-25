@@ -15,7 +15,7 @@ public class Puesto {
         return numAsiento;
     }
 
-    public String getEstado() {
+    public String isOcupado() {
         return estado;
     }
 
@@ -25,14 +25,7 @@ public class Puesto {
     public void liberar() {
         this.estado = "Disponible";
     }
-    
-    public void mantenimiento() {
-        this.estado = "Mantemiento";
-    }
-    
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
+
     @Override
     public String toString() {
         return "Puesto\nnumAsiento=" + numAsiento +"\nEstado: "+ estado;

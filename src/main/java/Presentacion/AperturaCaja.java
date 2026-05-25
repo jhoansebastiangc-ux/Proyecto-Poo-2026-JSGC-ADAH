@@ -14,9 +14,17 @@ public class AperturaCaja extends javax.swing.JFrame {
     /**
      * Creates new form AperturaCaja
      */
-    public AperturaCaja() {
+    MenuPrincipal myPrincipal;
+    public AperturaCaja(MenuPrincipal mp) {
         initComponents();
+        this.myPrincipal=mp;
         setLocationRelativeTo(null);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
+        public void windowClosing(java.awt.event.WindowEvent e) {
+            myPrincipal.setVisible(true);
+                }
+        });
     }
 
     /**
@@ -33,19 +41,19 @@ public class AperturaCaja extends javax.swing.JFrame {
         txtMontoInicial = new javax.swing.JTextField();
         cmdRegistrar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txtMostrar = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel2.setText("Digite el monto inicial de caja:");
 
         cmdRegistrar.setText("Registrar");
         cmdRegistrar.addActionListener(this::cmdRegistrarActionPerformed);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        txtMostrar.setColumns(20);
+        txtMostrar.setRows(5);
+        jScrollPane1.setViewportView(txtMostrar);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -108,6 +116,14 @@ public class AperturaCaja extends javax.swing.JFrame {
 
     private void cmdRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdRegistrarActionPerformed
         // TODO add your handling code here:
+    try {
+    double numero = Double.parseDouble(txtMontoInicial.getText());
+    String cad= this.myPrincipal.getMyEmpresa().abrirCaja(numero);
+    txtMostrar.setText(cad);
+    this.myPrincipal.habiitarSistema();
+} catch (NumberFormatException e) {
+    txtMostrar.setText("Digite un valor numerico");
+}
     }//GEN-LAST:event_cmdRegistrarActionPerformed
 
     /**
@@ -121,7 +137,7 @@ public class AperturaCaja extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField txtMontoInicial;
+    private javax.swing.JTextArea txtMostrar;
     // End of variables declaration//GEN-END:variables
 }

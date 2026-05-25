@@ -315,7 +315,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel8">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Fecha Salida"/>
+            <Property name="text" type="java.lang.String" value="Fecha Salida:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtFecha">
@@ -330,7 +330,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel9">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Hora Salida"/>
+            <Property name="text" type="java.lang.String" value="Hora Salida:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtBus">
@@ -340,7 +340,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel10">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Bus Salida"/>
+            <Property name="text" type="java.lang.String" value="Bus Salida:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel11">

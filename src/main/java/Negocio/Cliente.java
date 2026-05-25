@@ -5,9 +5,9 @@ public class Cliente extends Persona {
     
 private Date registro;
 
-  public Cliente(String documento, String nombre, Date registro){
+  public Cliente(String documento, String nombre){
       super(documento, nombre);
-      this.registro = registro;
+      this.registro = new Date();
   }
 
     public Date getRegistro() {
@@ -22,4 +22,5 @@ private Date registro;
     public String toString() {
         return "Cliente{" + "registro=" + registro + '}';
     }
-  }
+  
+}

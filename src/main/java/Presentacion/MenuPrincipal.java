@@ -22,11 +22,23 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
         this.myEmpresa=new Empresa();
         initComponents();
         setLocationRelativeTo(null);
-        //iniciarReloj();
+        bloquearSistema();
     }
 
     public Empresa getMyEmpresa() {
         return myEmpresa;
+    }
+    public void bloquearSistema(){
+            cmdParametrizacion.setEnabled(false);
+            cmdVenta.setEnabled(false);
+            cmdCancelaciones.setEnabled(false);
+            cmdReportes.setEnabled(false);
+    }
+        public void habiitarSistema(){
+            cmdParametrizacion.setEnabled(true);
+            cmdVenta.setEnabled(true);
+            cmdCancelaciones.setEnabled(true);
+            cmdReportes.setEnabled(true);  
     }
     
     /*private void iniciarReloj(){
@@ -56,8 +68,6 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
         cmdCancelaciones = new javax.swing.JButton();
         cmdVenta = new javax.swing.JButton();
         cmdReportes = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        lblHora = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocation(new java.awt.Point(0, 0));
@@ -66,7 +76,7 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
         jLabel1.setText("MENU PRINCIPAL");
 
         cmdCajaDia.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        cmdCajaDia.setText("Caja Del Dia");
+        cmdCajaDia.setText("Abrir Caja Del Dia");
         cmdCajaDia.addActionListener(this::cmdCajaDiaActionPerformed);
 
         cmdParametrizacion.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -85,10 +95,6 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
         cmdReportes.setText("Reportes");
         cmdReportes.addActionListener(this::cmdReportesActionPerformed);
 
-        lblHora.setEditable(false);
-        lblHora.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jScrollPane2.setViewportView(lblHora);
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -97,38 +103,31 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(111, 111, 111)
-                        .addComponent(jLabel1)
-                        .addGap(32, 32, 32)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE))
+                        .addComponent(jLabel1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cmdCajaDia, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cmdVenta, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cmdParametrizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cmdCancelaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(83, 83, 83)
-                                .addComponent(cmdReportes, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                            .addComponent(cmdVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmdCajaDia, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmdParametrizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmdCancelaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(83, 83, 83)
+                        .addComponent(cmdReportes, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(16, 16, 16)
+                .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmdCajaDia)
-                    .addComponent(cmdParametrizacion))
-                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cmdParametrizacion)
+                    .addComponent(cmdCajaDia, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cmdVenta)
                     .addComponent(cmdCancelaciones))
@@ -144,7 +143,7 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
             .addGroup(layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -159,7 +158,7 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
 
     private void cmdCajaDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCajaDiaActionPerformed
      // TODO add your handling code here:
-     FrmCajaDia cajaDia=new FrmCajaDia(this);
+     AperturaCaja cajaDia=new AperturaCaja(this);
      cajaDia.setVisible(true);
      this.setVisible(false);
     }//GEN-LAST:event_cmdCajaDiaActionPerformed
@@ -173,7 +172,9 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
 
     private void cmdCancelacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCancelacionesActionPerformed
        // TODO add your handling code here:
-       
+       Cancelaciones cancelacion=new Cancelaciones(this);
+       cancelacion.setVisible(true);
+       this.setVisible(false);
     }//GEN-LAST:event_cmdCancelacionesActionPerformed
 
     private void cmdVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdVentaActionPerformed
@@ -220,7 +221,5 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
     private javax.swing.JButton cmdVenta;
     public javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextPane lblHora;
     // End of variables declaration//GEN-END:variables
 }
