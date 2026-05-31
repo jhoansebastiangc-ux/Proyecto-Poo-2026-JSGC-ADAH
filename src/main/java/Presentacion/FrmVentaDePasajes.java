@@ -290,8 +290,9 @@ public class FrmVentaDePasajes extends javax.swing.JFrame {
         String nombre=txtNombre.getText();
         String documento=txtDocumento.getText();
         String salida=cmdSalidas.getSelectedItem().toString();
+        boolean idaYVuelta = cmdIdayVuelta.isSelected();
         if(!nombre.isEmpty()||!documento.isEmpty()){
-        cad=this.myPrincipal.getMyEmpresa().registrarTiquete(salida,asiento,nombre,documento);
+        cad=this.myPrincipal.getMyEmpresa().registrarTiquete(salida,asiento,nombre,documento,idaYVuelta);
         }else{
         cad="Digite nombre y documento del pasajero";
         }

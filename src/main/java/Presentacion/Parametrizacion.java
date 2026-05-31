@@ -1136,10 +1136,10 @@ public class Parametrizacion extends javax.swing.JFrame {
         
     switch(tipo){
         case "Normal":
-            txtCap.setText("30");
+            txtCap.setText("40");
             break;
         case "Ejecutivo":
-            txtCap.setText("40");
+            txtCap.setText("30");
             break;
     }
     

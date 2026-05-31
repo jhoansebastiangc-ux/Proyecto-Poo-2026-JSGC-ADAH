@@ -7,14 +7,16 @@ public class Tiquete {
     private Puesto myPuesto;
     private double valorPagar;
     private String estado;
+    private boolean idaYVuelta;
 
-    public Tiquete(int cod,String nombre, String documento, Puesto myPuesto, double valorPagar) {
+    public Tiquete(int cod,String nombre, String documento, Puesto myPuesto, double valorPagar, boolean  idaYVuelta) {
         this.codTq=generarCodigoTiquete(cod);
         this.nombre = nombre;
         this.documento = documento;
         this.myPuesto = myPuesto;
         this.valorPagar = valorPagar;
         this.estado = "Vigente";
+        this.idaYVuelta = idaYVuelta;
     }
         private String generarCodigoTiquete(int codTq){
         String cod=String.format("TQ-%04d",codTq+1);
@@ -47,6 +49,10 @@ public class Tiquete {
         return estado;
     }
 
+    public boolean isIdaYVuelta() {
+        return idaYVuelta;
+    }
+    
     public void setMyPuesto(Puesto myPuesto) {
         this.myPuesto = myPuesto;
     }
@@ -67,9 +73,11 @@ public class Tiquete {
         this.documento = documento;
     }
 
+    
     @Override
     public String toString() {
-        return "Tiquete="+codTq+"\nPasajero=" + documento + "----" + nombre + "\nPuesto=" + myPuesto.getNumAsiento() + "\nValorPagar=" + valorPagar + "\nEstado=" + estado ;
+        String tipoViaje = idaYVuelta ? "Ida y Vuelta" : "Solo Ida";
+        return "Tiquete="+codTq+"\nPasajero=" + documento + "----" + nombre + "\nPuesto=" + myPuesto.getNumAsiento() + "\nValorPagar=" + valorPagar + "\nEstado=" + estado + "\nTipo de viaje: " + tipoViaje ;
     }
     
 

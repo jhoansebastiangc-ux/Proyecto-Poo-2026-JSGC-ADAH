@@ -16,9 +16,9 @@ public class Bus {
     private void crearAsientos(){
         int puestos;
         if(tipoServ.equals("Normal")){
-            puestos=30;
-        }else{
             puestos=40;
+        }else{
+            puestos=30;
         }
         myPuestos=new Puesto[puestos];
         for (int i = 0; i < puestos; i++) {
@@ -69,8 +69,4 @@ public class Bus {
         //no exite bus sin puesto
         return "Placa: " + placa + "\nTipo De Servicio: " + tipoServ + "\nCapacidad: " + myPuestos.length + "\nEstado: " + estado+"\n" ;
     }
-    
-    
-    
-    
-}
+  }

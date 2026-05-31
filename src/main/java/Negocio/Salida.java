@@ -35,15 +35,16 @@ public class Salida {
         this.tarifa=calcularTarifa();
         this.myTiquetes=new ArrayList<>();
     }
-    public String registrarTiquete(Salida salida,String nombre, String documento, Puesto myPuesto, double valorPagar){
+    public String registrarTiquete(Salida salida,String nombre, String documento, Puesto myPuesto, double valorPagar, boolean idaYVuelta){
         int cod=buscarCodUltimoTq();
-        Tiquete t=new Tiquete(cod,nombre,documento,myPuesto, valorPagar);
+        Tiquete t=new Tiquete(cod,nombre,documento,myPuesto, valorPagar, idaYVuelta);
         this.myTiquetes.add(t);
+        String tipoViaje = idaYVuelta ? "Ida y Vuelta" : "Solo Ida";
         return "Tiquete vendido con exito:\nTiquete:"+myTiquetes.getLast().getCodTq()+"\nPasajero: "+myTiquetes.getLast().getDocumento()+"---"+myTiquetes.getLast().getNombre()
                 +"\nSalida:"+salida.getIdSalida()+"("+salida.getRuta().getOrigen()+"--->"+salida.getRuta().getDestino()
                 +")"+salida.getFecha()+"   "+salida.getHora()+"\nBus: "+salida.getBusAsignado().getPlaca()
                 +"  "+"("+salida.getBusAsignado().getTipoServ()+")  Capacidad: "+salida.getBusAsignado().getMyPuestos().length
-                +"\nSilla: "+myPuesto.getNumAsiento()+"\nValor Pagado: $"+valorPagar+"\nEstado del tiquete: "+t.getEstado();
+                +"\nSilla: "+myPuesto.getNumAsiento()+"\nValor Pagado: $"+valorPagar+"\nEstado del tiquete: "+t.getEstado() +"\nTipo de viaje: "+tipoViaje;
     }
     
     private int buscarCodUltimoTq(){
