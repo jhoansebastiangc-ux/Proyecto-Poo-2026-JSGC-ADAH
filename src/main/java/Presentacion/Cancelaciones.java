@@ -1,5 +1,10 @@
 package Presentacion;
-
+import javax.swing.Timer;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.text.SimpleDateFormat;
 public class Cancelaciones extends javax.swing.JFrame {
     
     private MenuPrincipal myPrincipal;
@@ -7,6 +12,7 @@ public class Cancelaciones extends javax.swing.JFrame {
         initComponents();
             this.myPrincipal=mp;
         setLocationRelativeTo(null);
+        mp.getReloj().addActionListener(e -> actualizarReloj());
         cargarSalidas();
         cmdCancelar.setEnabled(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -16,11 +22,18 @@ public class Cancelaciones extends javax.swing.JFrame {
                 }
         });
     }
+    private void actualizarReloj() {
+        DateTimeFormatter formatoF = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatoH = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime horaActual = LocalTime.now();
+        LocalDate fecha = LocalDate.now();
+        lblHora.setText("Fecha: "+formatoF.format(fecha)+"\nHora: "+horaActual.format(formatoH)); 
+    }
 
     private void cargarSalidas(){
     cmdSalidas.removeAllItems();
 
-    String cad=this.myPrincipal.getMyEmpresa().cargarSalidas();
+    String cad=this.myPrincipal.getMyEmpresa().cargarSalidasCancelar();
 
     String[] salidas=cad.split(",");
 
@@ -63,6 +76,8 @@ public class Cancelaciones extends javax.swing.JFrame {
         txtTiquetes = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         txtConductor = new javax.swing.JTextField();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        lblHora = new javax.swing.JTextPane();
 
         jLabel2.setText("jLabel2");
 
@@ -124,6 +139,9 @@ public class Cancelaciones extends javax.swing.JFrame {
 
         txtConductor.setEditable(false);
         txtConductor.addActionListener(this::txtConductorActionPerformed);
+
+        lblHora.setEditable(false);
+        jScrollPane2.setViewportView(lblHora);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -193,7 +211,11 @@ public class Cancelaciones extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(txtTiquetes, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(75, 75, 75)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(157, 157, 157))
         );
         jPanel1Layout.setVerticalGroup(
@@ -201,9 +223,11 @@ public class Cancelaciones extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(65, 65, 65)
+                        .addGap(7, 7, 7)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(15, 15, 15)
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
@@ -272,10 +296,15 @@ public class Cancelaciones extends javax.swing.JFrame {
 
     private void cmdCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCancelarActionPerformed
         // TODO add your handling code here:
+        String cad="";
+        if(cmdSalidas.getSelectedItem()!=null){
         String salida=cmdSalidas.getSelectedItem().toString();
-        String cad=this.myPrincipal.getMyEmpresa().cancelarSalida(salida);
+         cad=this.myPrincipal.getMyEmpresa().cancelarSalida(salida);
         cmdCheck.setSelected(false);
         cmdCancelar.setEnabled(false);
+        }else{
+         cad="No hay salidas disponibles";
+        }
         txtMostrar.setText(cad);
     }//GEN-LAST:event_cmdCancelarActionPerformed
 
@@ -324,7 +353,9 @@ public class Cancelaciones extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextPane lblHora;
     private javax.swing.JTextField txtBus;
     private javax.swing.JTextField txtConductor;
     private javax.swing.JTextField txtDestino;

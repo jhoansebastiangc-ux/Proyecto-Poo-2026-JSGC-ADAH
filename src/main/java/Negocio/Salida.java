@@ -208,21 +208,15 @@ public String toString() {
     DateTimeFormatter formatoHora =
             DateTimeFormatter.ofPattern("HH:mm");
 
-    return "Salida\n" +
-            "idSalida=" + idSalida +
-            "\nRuta=" + ruta.getCodigo() +
-            "\nFechaSalida=" +
-            fechaSalida.format(formatoFecha) +
-            "\nHoraSalida=" +
-            horaSalida.format(formatoHora) +
-            "\nBusAsignado=" + busAsignado.getPlaca() +
-            "\nFechaLlegada=" +
-            fechaLlegada.format(formatoFecha) +
-            "\nHoraLlegada=" +
-            horaLlegada.format(formatoHora) +
-            "\nEstado=" + estado +
-            "\nTarifa="+tarifa +
-            "\nConductor="+conductorAsignado.getNombre();
+    return String.format(
+            "%-6s %-6s %-12s %-8s %-10s %-20s %-15s",
+            getIdSalida(),
+            getRuta().getCodigo(),
+            getFecha(),
+            getHora(),
+            getBusAsignado().getPlaca(),
+            getConductorAsignado().getNombre(),
+            getEstado());
 }
     
 }

@@ -11,7 +11,7 @@ public class Bus {
         this.tipoServ = tipoServ;
         crearAsientos();
         //estado disponible
-        this.estado = "Disponible";
+        this.estado = "Inactivo";
     }
     private void crearAsientos(){
         int puestos;
@@ -67,6 +67,10 @@ public class Bus {
     @Override
     public String toString() {
         //no exite bus sin puesto
-        return "Placa: " + placa + "\nTipo De Servicio: " + tipoServ + "\nCapacidad: " + myPuestos.length + "\nEstado: " + estado+"\n" ;
+            return String.format("%-12s %-12s %-12d %-15s",
+            placa,
+            tipoServ,
+            myPuestos.length,
+            estado);
     }
   }

@@ -1,57 +1,57 @@
 package Negocio;
 
 public class Caja {
-    private double montocaja; 
+    private double montocaja;
     private double totalVendido;
-    private double totalReembolsado; 
+    private double totalReembolsado;
+    private double totalVuelta;   // suma de valores a transferir al destino
     private double ingresoNeto;
 
     public Caja(double montocaja) {
-        this.montocaja = montocaja;
-        this.totalVendido = 0.0;
+        this.montocaja        = montocaja;
+        this.totalVendido     = 0.0;
         this.totalReembolsado = 0.0;
-        this.ingresoNeto = 0.0;
+        this.totalVuelta      = 0.0;
+        this.ingresoNeto      = 0.0;
     }
 
-    public double getMontocaja() {
-        return montocaja;
+    public void setMontocaja(double ingreso, double reembolsado, double vuelta) {
+    this.montocaja        += ingreso;
+    this.montocaja        -= reembolsado;
+    this.totalVendido     += ingreso;
+    this.totalReembolsado += reembolsado;
+
+    if (reembolsado > 0) {
+        this.totalVuelta -= vuelta;
+    } else {
+        this.totalVuelta += vuelta;
     }
 
-    public double getTotalVendido() {
-        return totalVendido;
+    actualizarIngresoNeto();
     }
 
-    public double getTotalReembolsado() {
-        return totalReembolsado;
+    private void actualizarIngresoNeto() {
+        // El ingreso neto excluye reembolsos Y la porción de vuelta
+        this.ingresoNeto = totalVendido - totalReembolsado - totalVuelta;
     }
 
-    public double getIngresoNeto() {
-        return ingresoNeto;
-    }
+    public double getMontocaja()        { return montocaja; }
+    public double getTotalVendido()     { return totalVendido; }
+    public double getTotalReembolsado() { return totalReembolsado; }
+    public double getTotalVuelta()      { return totalVuelta; }
+    public double getIngresoNeto()      { return ingresoNeto; }
 
-    public void setMontocaja(double ingreso,double reembolsado) {
-        this.montocaja += ingreso;
-        this.montocaja -= reembolsado;
-        setTotalVendido(ingreso);
-        setTotalReembolsado(reembolsado);
-        actualizarIngresoNeto();
-    }
-
-    public void setTotalVendido(double ingreso) {
-        this.totalVendido += ingreso;
-    }
-
-    public void setTotalReembolsado(double reembolsado) {
-        this.totalReembolsado += reembolsado;
-    }
-
-    public void actualizarIngresoNeto() {
-        this.ingresoNeto = this.totalVendido-this.totalReembolsado;
+    // mantener compatibilidad con llamadas anteriores (reembolsos)
+    public void setMontocaja(double ingreso, double reembolsado) {
+        setMontocaja(ingreso, reembolsado, 0.0);
     }
 
     @Override
     public String toString() {
-        return "Caja{" + "montocaja=" + montocaja + ", totalVendido=" + totalVendido + ", totalReembolsado=" + totalReembolsado + ", ingresoNeto=" + ingresoNeto + '}';
+        return "Caja{montocaja=" + montocaja
+                + ", totalVendido=" + totalVendido
+                + ", totalReembolsado=" + totalReembolsado
+                + ", totalVuelta=" + totalVuelta
+                + ", ingresoNeto=" + ingresoNeto + "}";
     }
-    
 }

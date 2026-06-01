@@ -1,4 +1,10 @@
 package Presentacion;
+import javax.swing.Timer;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.text.SimpleDateFormat;
 
 public class FrmVentaDePasajes extends javax.swing.JFrame {
     
@@ -7,6 +13,7 @@ public class FrmVentaDePasajes extends javax.swing.JFrame {
         initComponents();
         this.myPrincipal=mp;
         setLocationRelativeTo(null);
+        mp.getReloj().addActionListener(e -> actualizarReloj());
         cargarSalidas();
         addWindowListener(new java.awt.event.WindowAdapter() {
         @Override
@@ -14,6 +21,13 @@ public class FrmVentaDePasajes extends javax.swing.JFrame {
             myPrincipal.setVisible(true);
                 }
         });
+    }
+    private void actualizarReloj() {
+        DateTimeFormatter formatoF = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatoH = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime horaActual = LocalTime.now();
+        LocalDate fecha = LocalDate.now();
+        lblHora.setText("Fecha: "+formatoF.format(fecha)+"\nHora: "+horaActual.format(formatoH)); 
     }
 
     @SuppressWarnings("unchecked")
@@ -49,6 +63,8 @@ public class FrmVentaDePasajes extends javax.swing.JFrame {
         cmdIdayVuelta = new javax.swing.JCheckBox();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtMostrarS = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        lblHora = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -223,7 +239,7 @@ public class FrmVentaDePasajes extends javax.swing.JFrame {
                     .addComponent(txtDocumento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(cmdIdayVuelta)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cmdListar)
                     .addComponent(cmdVender))
@@ -235,6 +251,9 @@ public class FrmVentaDePasajes extends javax.swing.JFrame {
         txtMostrarS.setRows(5);
         jScrollPane1.setViewportView(txtMostrarS);
 
+        lblHora.setEditable(false);
+        jScrollPane2.setViewportView(lblHora);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -242,17 +261,24 @@ public class FrmVentaDePasajes extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(73, 73, 73)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(55, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 435, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28))
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1)
+                .addGap(28, 28, 28))
         );
 
         pack();
@@ -276,28 +302,37 @@ public class FrmVentaDePasajes extends javax.swing.JFrame {
 
     private void cmdListarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdListarActionPerformed
         // TODO add your handling code here:
+        String cad="";
+        if(cmdSalidas.getSelectedIndex()!=-1){
         String salida=cmdSalidas.getSelectedItem().toString();
-        String cad=this.myPrincipal.getMyEmpresa().listarTiquetes(salida);
+        cad=this.myPrincipal.getMyEmpresa().listarTiquetes(salida);
+        }else{
+            cad="No hay salidas disponibles";
+        }
         txtMostrarS.setText(cad);
     }//GEN-LAST:event_cmdListarActionPerformed
 
     private void cmdVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdVenderActionPerformed
         // TODO add your handling code here:
         String cad="";
+        if(cmdSalidas.getSelectedIndex()!=-1){
         String texto =cmdAsientos.getSelectedItem().toString();
         texto = texto.replace("Asiento: ", "");
+        String salida=cmdSalidas.getSelectedItem().toString();
         int asiento = Integer.parseInt(texto);
         String nombre=txtNombre.getText();
         String documento=txtDocumento.getText();
-        String salida=cmdSalidas.getSelectedItem().toString();
         boolean idaYVuelta = cmdIdayVuelta.isSelected();
         if(!nombre.isEmpty()||!documento.isEmpty()){
         cad=this.myPrincipal.getMyEmpresa().registrarTiquete(salida,asiento,nombre,documento,idaYVuelta);
+        cargarAsientos();
         }else{
         cad="Digite nombre y documento del pasajero";
         }
+        }else{
+            cad="No hay salidas disponibles";
+        }
         txtMostrarS.setText(cad);
-        cargarAsientos();
     }//GEN-LAST:event_cmdVenderActionPerformed
 
     private void cmdIdayVueltaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdIdayVueltaActionPerformed
@@ -375,6 +410,8 @@ public class FrmVentaDePasajes extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextPane lblHora;
     private javax.swing.JTextField txtBus;
     private javax.swing.JTextField txtDestino;
     private javax.swing.JTextField txtDocumento;

@@ -1,6 +1,10 @@
 package Presentacion;
 import java.time.LocalDate;
-
+import javax.swing.Timer;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.text.SimpleDateFormat;
 public class Reportes extends javax.swing.JFrame {
     
 
@@ -10,12 +14,20 @@ public class Reportes extends javax.swing.JFrame {
         this.myPrincipal=mp;
         cargarRutas();
         setLocationRelativeTo(null);
+        mp.getReloj().addActionListener(e -> actualizarReloj());
         addWindowListener(new java.awt.event.WindowAdapter() {
         @Override
         public void windowClosing(java.awt.event.WindowEvent e) {
             myPrincipal.setVisible(true);
                 }
         });
+    }
+        private void actualizarReloj() {
+        DateTimeFormatter formatoF = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatoH = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime horaActual = LocalTime.now();
+        LocalDate fecha = LocalDate.now();
+        lblHora.setText("Fecha: "+formatoF.format(fecha)+"\nHora: "+horaActual.format(formatoH)); 
     }
     
     private void cargarRutas(){
@@ -57,6 +69,8 @@ public class Reportes extends javax.swing.JFrame {
         cmdFechaInicio = new com.toedter.calendar.JDateChooser();
         jLabel3 = new javax.swing.JLabel();
         cmdFechaFin = new com.toedter.calendar.JDateChooser();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        lblHora = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -187,22 +201,32 @@ public class Reportes extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Ventas por Fecha", jPanel3);
 
+        lblHora.setEditable(false);
+        jScrollPane1.setViewportView(lblHora);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(180, 180, 180)
+                .addGap(107, 107, 107)
                 .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(30, Short.MAX_VALUE))
         );
@@ -289,10 +313,12 @@ public class Reportes extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextPane lblHora;
     private javax.swing.JTextArea txtMostrarDiario;
     private javax.swing.JTextArea txtMostrarFecha;
     private javax.swing.JTextArea txtMostrarRuta;

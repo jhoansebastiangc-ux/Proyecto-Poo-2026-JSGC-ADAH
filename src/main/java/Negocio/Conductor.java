@@ -1,5 +1,6 @@
 package Negocio;
 import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public class Conductor extends Persona {
     
@@ -19,8 +20,14 @@ private Date fechaContratacion;
     }
 
     @Override
-    public String toString() {
-        return "Conductor{" + "fechaContratacion=" + fechaContratacion + '}';
-    }
+   public String toString() {
+    SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+
+    return String.format(
+            "%-15s %-25s %-15s",
+            getDocumento(),
+            getNombre(),
+            formato.format(fechaContratacion));
+}
 
 }

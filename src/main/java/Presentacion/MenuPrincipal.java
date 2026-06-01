@@ -4,7 +4,11 @@ import javax.swing.Timer;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.text.SimpleDateFormat;
+import javax.swing.ImageIcon;
+import java.awt.Image;
+
 public class MenuPrincipal extends javax.swing.JFrame {
     
 private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MenuPrincipal.class.getName());
@@ -15,7 +19,10 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
         this.myEmpresa=new Empresa();
         initComponents();
         setLocationRelativeTo(null);
+        iniciarReloj();
         bloquearSistema();
+        activarIcons();
+        
     }
 
     public Empresa getMyEmpresa() {
@@ -34,7 +41,7 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
             cmdReportes.setEnabled(true);  
     }
     
-    /*private void iniciarReloj(){
+    private void iniciarReloj(){
         
         reloj = new Timer(1000, e -> {
             DateTimeFormatter formatoF =DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -42,11 +49,51 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
             LocalTime horaActual = LocalTime.now();
             LocalDate fecha=LocalDate.now();
             lblHora.setText("Fecha: "+formatoF.format(fecha)+"\nHora: "+horaActual.format(formatoH));
-
+            myEmpresa.validarMinimoTiquetes();
+            myEmpresa.validarEstadoSalidas();
+            
         });
 
         reloj.start();
-    }*/
+        
+    }
+    
+    public Timer getReloj() {
+    return reloj;
+    }
+    private void activarIcons(){
+        
+        ImageIcon iconoCaja = new ImageIcon(getClass().getResource("/Imagenes/caja.png"));
+        
+        Image imgCaja = iconoCaja.getImage().getScaledInstance(24, 24, java.awt.Image.SCALE_SMOOTH);
+
+        cmdCajaDia.setIcon(new ImageIcon(imgCaja));
+        
+        ImageIcon iconoVenta = new ImageIcon(getClass().getResource("/Imagenes/venta.png"));
+        
+        Image imgVenta = iconoVenta.getImage().getScaledInstance(24, 24, java.awt.Image.SCALE_SMOOTH);
+
+        cmdVenta.setIcon(new ImageIcon(imgVenta));
+        
+        ImageIcon iconoParametrizacion = new ImageIcon(getClass().getResource("/Imagenes/parametrizacion.png"));
+        
+        Image imgParametrizacion = iconoParametrizacion.getImage().getScaledInstance(24, 24, java.awt.Image.SCALE_SMOOTH);
+
+        cmdParametrizacion.setIcon(new ImageIcon(imgParametrizacion));
+        
+        ImageIcon iconoCancelar = new ImageIcon(getClass().getResource("/Imagenes/cancelar.png"));
+        
+        Image imgCancelaciones = iconoCancelar.getImage().getScaledInstance(24, 24, java.awt.Image.SCALE_SMOOTH);
+
+        cmdCancelaciones.setIcon(new ImageIcon(imgCancelaciones));
+        
+        ImageIcon iconoReporte = new ImageIcon(getClass().getResource("/Imagenes/reporte.png"));
+        
+        Image imgReportes = iconoReporte.getImage().getScaledInstance(24, 24, java.awt.Image.SCALE_SMOOTH);
+
+        cmdReportes.setIcon(new ImageIcon(imgReportes));
+        
+    }
     
 
 
@@ -61,6 +108,8 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
         cmdCancelaciones = new javax.swing.JButton();
         cmdVenta = new javax.swing.JButton();
         cmdReportes = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        lblHora = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocation(new java.awt.Point(0, 0));
@@ -88,6 +137,9 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
         cmdReportes.setText("Reportes");
         cmdReportes.addActionListener(this::cmdReportesActionPerformed);
 
+        lblHora.setEditable(false);
+        jScrollPane1.setViewportView(lblHora);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -96,35 +148,45 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(111, 111, 111)
-                        .addComponent(jLabel1))
+                        .addComponent(jLabel1)
+                        .addGap(28, 28, 28)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmdVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmdCajaDia, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmdParametrizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmdCancelaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(83, 83, 83)
-                        .addComponent(cmdReportes, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(cmdCajaDia, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
+                            .addComponent(cmdVenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(cmdParametrizacion, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
+                            .addComponent(cmdCancelaciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(115, 115, 115)
+                .addComponent(cmdReportes, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cmdParametrizacion)
-                    .addComponent(cmdCajaDia, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE))
+                    .addComponent(cmdCajaDia, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+                    .addComponent(cmdParametrizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmdVenta)
-                    .addComponent(cmdCancelaciones))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cmdVenta, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+                    .addComponent(cmdCancelaciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cmdReportes)
                 .addContainerGap())
         );
@@ -134,16 +196,15 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addGap(0, 18, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         pack();
@@ -196,5 +257,7 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
     private javax.swing.JButton cmdVenta;
     public javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextPane lblHora;
     // End of variables declaration//GEN-END:variables
 }

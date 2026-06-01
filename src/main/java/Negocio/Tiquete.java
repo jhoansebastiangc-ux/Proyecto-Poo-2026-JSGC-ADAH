@@ -6,6 +6,7 @@ public class Tiquete {
     private String documento;
     private Puesto myPuesto;
     private double valorPagar;
+    private double  valorVuelta;
     private String estado;
     private boolean idaYVuelta;
 
@@ -17,10 +18,18 @@ public class Tiquete {
         this.valorPagar = valorPagar;
         this.estado = "Vigente";
         this.idaYVuelta = idaYVuelta;
+        this.valorVuelta = calcularValorVuelta(valorPagar, idaYVuelta);
     }
         private String generarCodigoTiquete(int codTq){
         String cod=String.format("TQ-%04d",codTq+1);
         return cod;
+    }
+         private double calcularValorVuelta(double valor, boolean idaYVuelta) {
+        return idaYVuelta ? valor / 2.0 : 0.0;
+    }
+    
+    public double getValorVuelta() { 
+        return valorVuelta; 
     }
 
     public String getCodTq() {
@@ -43,7 +52,10 @@ public class Tiquete {
     public double getValorPagar() {
         return valorPagar;
     }
-    
+     
+    public double getValorNeto() {
+        return valorPagar - valorVuelta;
+    }
 
     public String getEstado() {
         return estado;
@@ -76,8 +88,19 @@ public class Tiquete {
     
     @Override
     public String toString() {
-        String tipoViaje = idaYVuelta ? "Ida y Vuelta" : "Solo Ida";
-        return "Tiquete="+codTq+"\nPasajero=" + documento + "----" + nombre + "\nPuesto=" + myPuesto.getNumAsiento() + "\nValorPagar=" + valorPagar + "\nEstado=" + estado + "\nTipo de viaje: " + tipoViaje ;
+                String tipo = idaYVuelta ? "Ida y Vuelta" : "Solo Ida";
+        String info = "Tiquete=" + codTq
+                + "\nPasajero=" + documento + "----" + nombre
+                + "\nPuesto=" + myPuesto.getNumAsiento()
+                + "\nValor pagado: $" + valorPagar
+                + "\nTipo de viaje: " + tipo
+                + "\nEstado=" + estado;
+        if (idaYVuelta) {
+            info += "\nValor vuelta (transferir destino): $" + valorVuelta
+                  + "\nIngreso neto empresa: $" + getValorNeto();
+        }
+        return info;
+        
     }
     
 

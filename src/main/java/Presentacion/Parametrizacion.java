@@ -7,6 +7,10 @@ import javax.swing.JFormattedTextField;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.awt.Font;
 
 public class Parametrizacion extends javax.swing.JFrame {
     
@@ -15,15 +19,19 @@ public class Parametrizacion extends javax.swing.JFrame {
         initComponents();    
         setLocationRelativeTo(null);
         this.myPrincipal=mp;
+        mp.getReloj().addActionListener(e -> actualizarReloj());
         cargarPlacas();
         cargarRutas();
-        cargarSalidas();
         cargarConductores();
-        
         javax.swing.JTextField txtFecha =(javax.swing.JTextField) cmdFechaS.getDateEditor().getUiComponent();
         txtFecha.setEditable(false);
         txtFecha.setBackground(java.awt.Color.WHITE);
         
+        txtMostrar.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        txtMostrarBR.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        txtMostrarR.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        txtMostrarRutaA.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        txtMostrarSr.setFont(new Font("Monospaced", Font.PLAIN, 12));
         
          addWindowListener(new java.awt.event.WindowAdapter() {
         @Override
@@ -46,6 +54,14 @@ public class Parametrizacion extends javax.swing.JFrame {
 
          cmdHoraR.setModel(modelo);
          
+    }
+    
+           private void actualizarReloj() {
+        DateTimeFormatter formatoF = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatoH = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime horaActual = LocalTime.now();
+        LocalDate fecha = LocalDate.now();
+        lblHora.setText("Fecha: "+formatoF.format(fecha)+"\nHora: "+horaActual.format(formatoH)); 
     }
     
     private void cargarPlacas() {
@@ -102,32 +118,7 @@ public class Parametrizacion extends javax.swing.JFrame {
         }
     }
     }
-    private void cargarSalidas(){
-    String cad = this.myPrincipal.getMyEmpresa().cargarSalidas();
 
-    String[] salidas = cad.split(",");
-
-    for(String p : salidas){
-
-        boolean existe = false;
-
-        // recorrer combo box
-        for(int i = 0; i < cmdSalidaA.getItemCount(); i++){
-
-            String item = cmdSalidaA.getItemAt(i).toString();
-
-            if(item.equals(p)){
-                existe = true;
-                break;
-            }
-        }
-
-        // si no existe lo agrega
-        if(!existe){
-            cmdSalidaA.addItem(p);
-        }   
-    }
-    }
     
     private void cargarConductores(){
     String cad = this.myPrincipal.getMyEmpresa().cargarConductores();
@@ -245,32 +236,21 @@ public class Parametrizacion extends javax.swing.JFrame {
         txtDestinoS = new javax.swing.JTextField();
         jLabel40 = new javax.swing.JLabel();
         cmdConductor = new javax.swing.JComboBox<>();
+        jTabbedPane5 = new javax.swing.JTabbedPane();
         jPanel9 = new javax.swing.JPanel();
-        jPanel10 = new javax.swing.JPanel();
         jLabel30 = new javax.swing.JLabel();
         jLabel31 = new javax.swing.JLabel();
         jLabel32 = new javax.swing.JLabel();
-        jLabel33 = new javax.swing.JLabel();
-        jLabel34 = new javax.swing.JLabel();
-        cmdBus1 = new javax.swing.JComboBox<>();
-        jLabel35 = new javax.swing.JLabel();
-        txtCapacidadSalida1 = new javax.swing.JTextField();
-        cmdListarSA = new javax.swing.JButton();
-        cmdActualizar = new javax.swing.JButton();
-        jScrollPane9 = new javax.swing.JScrollPane();
-        txtMostrarSr1 = new javax.swing.JTextArea();
-        jLabel36 = new javax.swing.JLabel();
-        jLabel37 = new javax.swing.JLabel();
-        txtOrigenS1 = new javax.swing.JTextField();
-        txtDestinoS1 = new javax.swing.JTextField();
-        txtFechaS = new javax.swing.JTextField();
-        txtHoraS = new javax.swing.JTextField();
-        txtRutaS = new javax.swing.JTextField();
-        jLabel38 = new javax.swing.JLabel();
-        cmdSalidaA = new javax.swing.JComboBox<>();
-        jLabel39 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        txtDocumentoConductor = new javax.swing.JTextField();
+        txtNombreConductor = new javax.swing.JTextField();
+        cmdFechaIngreso = new com.toedter.calendar.JDateChooser();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        txtMostrarCond = new javax.swing.JTextArea();
+        cmdCrearC = new javax.swing.JButton();
+        cmdListarC = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        lblHora = new javax.swing.JTextPane();
 
         jComboBox7.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -281,8 +261,6 @@ public class Parametrizacion extends javax.swing.JFrame {
         jLabel14.setText("Buses");
 
         jLabel15.setText("Placa");
-
-        cmdPlaca.addActionListener(this::cmdPlacaActionPerformed);
 
         jLabel17.setText("Tipo de Servicio");
 
@@ -301,6 +279,7 @@ public class Parametrizacion extends javax.swing.JFrame {
         cmdListarB.setText("Listar");
         cmdListarB.addActionListener(this::cmdListarBActionPerformed);
 
+        txtMostrarBR.setEditable(false);
         txtMostrarBR.setColumns(20);
         txtMostrarBR.setRows(5);
         jScrollPane3.setViewportView(txtMostrarBR);
@@ -332,9 +311,9 @@ public class Parametrizacion extends javax.swing.JFrame {
                                     .addComponent(txtCap, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
                                 .addComponent(cmdListarB)))
-                        .addGap(16, 16, 16)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)))
-                .addGap(18, 18, 18))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(85, 85, 85))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -377,7 +356,7 @@ public class Parametrizacion extends javax.swing.JFrame {
 
         jLabel3.setText("Estado");
 
-        cmdEstadoActualizar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Disponible", "Mantenimiento" }));
+        cmdEstadoActualizar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo", "Mantenimiento" }));
 
         cmdPlacaActualizar.addActionListener(this::cmdPlacaActualizarActionPerformed);
 
@@ -391,6 +370,7 @@ public class Parametrizacion extends javax.swing.JFrame {
 
         txtCapacidadActualizar.setEditable(false);
 
+        txtMostrar.setEditable(false);
         txtMostrar.setColumns(20);
         txtMostrar.setRows(5);
         jScrollPane5.setViewportView(txtMostrar);
@@ -433,8 +413,8 @@ public class Parametrizacion extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(cmdListarBA)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40))
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(68, 68, 68))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -503,6 +483,7 @@ public class Parametrizacion extends javax.swing.JFrame {
         cmdListarR.setText("Listar");
         cmdListarR.addActionListener(this::cmdListarRActionPerformed);
 
+        txtMostrarR.setEditable(false);
         txtMostrarR.setColumns(20);
         txtMostrarR.setRows(5);
         jScrollPane6.setViewportView(txtMostrarR);
@@ -552,9 +533,9 @@ public class Parametrizacion extends javax.swing.JFrame {
                             .addComponent(txtTarifa, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextField4)
                             .addComponent(txtDestinoR, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(116, 116, 116))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(35, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -616,6 +597,7 @@ public class Parametrizacion extends javax.swing.JFrame {
         cmdActualizarR.setText("Actualizar");
         cmdActualizarR.addActionListener(this::cmdActualizarRActionPerformed);
 
+        txtMostrarRutaA.setEditable(false);
         txtMostrarRutaA.setColumns(20);
         txtMostrarRutaA.setRows(5);
         jScrollPane1.setViewportView(txtMostrarRutaA);
@@ -658,7 +640,7 @@ public class Parametrizacion extends javax.swing.JFrame {
                         .addComponent(cmdListarRutasA)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(186, Short.MAX_VALUE))
+                .addContainerGap(78, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -806,16 +788,13 @@ public class Parametrizacion extends javax.swing.JFrame {
                         .addComponent(cmdConductor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(56, 56, 56)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
-                        .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(97, 97, 97))
+                    .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addGap(15, 15, 15)
                         .addComponent(cmdCrearS)
                         .addGap(32, 32, 32)
-                        .addComponent(cmdListarS)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(cmdListarS)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -864,196 +843,10 @@ public class Parametrizacion extends javax.swing.JFrame {
                     .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel40, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(cmdConductor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(58, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         jTabbedPane4.addTab("Registrar", jPanel8);
-
-        jLabel30.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel30.setText("Salidas");
-
-        jLabel31.setText("Fecha");
-
-        jLabel32.setText("Hora");
-
-        jLabel33.setText("Ruta");
-
-        jLabel34.setText("Bus Asignado");
-
-        cmdBus1.addActionListener(this::cmdBus1ActionPerformed);
-
-        jLabel35.setText("Capacidad bus");
-
-        txtCapacidadSalida1.setEditable(false);
-
-        cmdListarSA.setText("Listar");
-        cmdListarSA.addActionListener(this::cmdListarSAActionPerformed);
-
-        cmdActualizar.setText("Actualizar");
-        cmdActualizar.addActionListener(this::cmdActualizarActionPerformed);
-
-        txtMostrarSr1.setEditable(false);
-        txtMostrarSr1.setColumns(20);
-        txtMostrarSr1.setRows(5);
-        jScrollPane9.setViewportView(txtMostrarSr1);
-
-        jLabel36.setText("Origen");
-
-        jLabel37.setText("Destino");
-
-        txtOrigenS1.setEditable(false);
-
-        txtDestinoS1.setEditable(false);
-
-        txtFechaS.setEditable(false);
-
-        txtHoraS.setEditable(false);
-
-        txtRutaS.setEditable(false);
-
-        jLabel38.setText("Salida");
-
-        cmdSalidaA.addActionListener(this::cmdSalidaAActionPerformed);
-
-        jLabel39.setText("Estado");
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Programada" }));
-        jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
-
-        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
-        jPanel10.setLayout(jPanel10Layout);
-        jPanel10Layout.setHorizontalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel10Layout.createSequentialGroup()
-                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmdActualizar, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel10Layout.createSequentialGroup()
-                                .addGap(239, 239, 239)
-                                .addComponent(jLabel30)))
-                        .addGap(18, 18, 18)
-                        .addComponent(cmdListarSA))
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel10Layout.createSequentialGroup()
-                                .addComponent(jLabel37)
-                                .addGap(172, 172, 172)
-                                .addComponent(jLabel39)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(6, 6, 6))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
-                                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jLabel35, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel34, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cmdBus1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtCapacidadSalida1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(182, 182, 182))
-                            .addGroup(jPanel10Layout.createSequentialGroup()
-                                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(jPanel10Layout.createSequentialGroup()
-                                        .addComponent(jLabel36)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(txtOrigenS1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel10Layout.createSequentialGroup()
-                                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel31)
-                                            .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addComponent(jLabel32)
-                                                .addComponent(jLabel33)))
-                                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jPanel10Layout.createSequentialGroup()
-                                                .addGap(53, 53, 53)
-                                                .addComponent(txtDestinoS1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(0, 0, Short.MAX_VALUE))
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(txtRutaS, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(txtHoraS, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(txtFechaS, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel38)
-                                .addGap(18, 18, 18)
-                                .addComponent(cmdSalidaA, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(12, 12, 12)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(141, 141, 141))
-        );
-        jPanel10Layout.setVerticalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel10Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel10Layout.createSequentialGroup()
-                        .addComponent(jLabel30)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel31)
-                            .addComponent(txtFechaS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel38)
-                            .addComponent(cmdSalidaA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(15, 15, 15)
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel32)
-                            .addComponent(txtHoraS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel33)
-                            .addComponent(txtRutaS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel36)
-                            .addComponent(txtOrigenS1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(9, 9, 9)
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel37)
-                            .addComponent(txtDestinoS1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel39)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(9, 9, 9)
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmdBus1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel35, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtCapacidadSalida1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmdActualizar)
-                    .addComponent(cmdListarSA))
-                .addContainerGap(42, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
-        jPanel9.setLayout(jPanel9Layout);
-        jPanel9Layout.setHorizontalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 853, Short.MAX_VALUE)
-            .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel9Layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, 853, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
-        );
-        jPanel9Layout.setVerticalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 356, Short.MAX_VALUE)
-            .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel9Layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
-        );
-
-        jTabbedPane4.addTab("Actualizar", jPanel9);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -1066,14 +859,101 @@ public class Parametrizacion extends javax.swing.JFrame {
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jTabbedPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
+                .addComponent(jTabbedPane4)
                 .addContainerGap())
         );
 
         jTabbedPane2.addTab("Salidas", jPanel3);
 
+        jLabel30.setText("Documento");
+
+        jLabel31.setText("Nombre");
+
+        jLabel32.setText("Fecha de Ingreso");
+
+        cmdFechaIngreso.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                cmdFechaIngresoAncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
+
+        txtMostrarCond.setColumns(20);
+        txtMostrarCond.setRows(5);
+        jScrollPane4.setViewportView(txtMostrarCond);
+
+        cmdCrearC.setText("Crear");
+        cmdCrearC.addActionListener(this::cmdCrearCActionPerformed);
+
+        cmdListarC.setText("Listar");
+        cmdListarC.addActionListener(this::cmdListarCActionPerformed);
+
+        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
+        jPanel9Layout.setHorizontalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel30)
+                            .addComponent(jLabel31))
+                        .addGap(31, 31, 31)
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtDocumentoConductor)
+                            .addComponent(txtNombreConductor, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)))
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addComponent(jLabel32)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmdFechaIngreso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel9Layout.createSequentialGroup()
+                                .addGap(0, 36, Short.MAX_VALUE)
+                                .addComponent(cmdCrearC)
+                                .addGap(32, 32, 32)
+                                .addComponent(cmdListarC)))))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(82, Short.MAX_VALUE))
+        );
+        jPanel9Layout.setVerticalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel30)
+                            .addComponent(txtDocumentoConductor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(24, 24, 24)
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel31)
+                            .addComponent(txtNombreConductor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(25, 25, 25)
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel32)
+                            .addComponent(cmdFechaIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(28, 28, 28)
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cmdCrearC)
+                            .addComponent(cmdListarC))))
+                .addContainerGap(69, Short.MAX_VALUE))
+        );
+
+        jTabbedPane5.addTab("Registrar", jPanel9);
+
+        jTabbedPane2.addTab("Conductores", jTabbedPane5);
+
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel1.setText("PARAMETRIZACION");
+
+        lblHora.setEditable(false);
+        jScrollPane2.setViewportView(lblHora);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -1082,230 +962,103 @@ public class Parametrizacion extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(138, 138, 138)
                 .addComponent(jLabel1)
+                .addGap(162, 162, 162)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 784, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(81, 81, 81))
+                .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 846, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(19, 19, 19))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(0, 27, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane2)
+                .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cmdListarBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdListarBActionPerformed
-        // TODO add your handling code here:
-        String cad=this.myPrincipal.getMyEmpresa().listarBus();
-        this.txtMostrarBR.setText(cad);
-    }//GEN-LAST:event_cmdListarBActionPerformed
-
     private void cmdCrearSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCrearSActionPerformed
         // TODO add your handling code here:
         if (cmdFechaS.getDate()!=null){
-        SimpleDateFormat formatoF = new SimpleDateFormat("dd/MM/yyyy");
-        SimpleDateFormat formatoH= new SimpleDateFormat("HH:mm");
-        String fecha=formatoF.format(cmdFechaS.getDate());
-        String hora=formatoH.format(cmdHoraS.getValue());
-        String ruta=cmdRuta.getSelectedItem().toString();
-        String bus=cmdBus.getSelectedItem().toString();
-        String conductor= cmdConductor.getSelectedItem().toString();
-        String cad=this.myPrincipal.getMyEmpresa().registrarSalida(fecha,hora,ruta,bus,conductor);
-          txtMostrarSr.setText(cad);  
+            SimpleDateFormat formatoF = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat formatoH= new SimpleDateFormat("HH:mm");
+            String fecha=formatoF.format(cmdFechaS.getDate());
+            String hora=formatoH.format(cmdHoraS.getValue());
+            String ruta=cmdRuta.getSelectedItem().toString();
+            String bus=cmdBus.getSelectedItem().toString();
+            String conductor= cmdConductor.getSelectedItem().toString();
+            String cad=this.myPrincipal.getMyEmpresa().registrarSalida(fecha,hora,ruta,bus,conductor);
+            txtMostrarSr.setText(cad);
         }else{
             txtMostrarSr.setText("Digite una fecha");
         }
-        
-        
     }//GEN-LAST:event_cmdCrearSActionPerformed
 
-    private void txtCapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCapActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtCapActionPerformed
-
-    private void cmdTipoServicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdTipoServicioActionPerformed
-        // TODO add your handling code here:
-        String tipo = cmdTipoServicio.getSelectedItem().toString();
-        
-    switch(tipo){
-        case "Normal":
-            txtCap.setText("40");
-            break;
-        case "Ejecutivo":
-            txtCap.setText("30");
-            break;
-    }
-    
-    }//GEN-LAST:event_cmdTipoServicioActionPerformed
-
-    private void cmdPlacaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdPlacaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cmdPlacaActionPerformed
-
-    private void cmdCrearBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCrearBActionPerformed
-        // TODO add your handling code here:
-        String placa,tipoS;
-        placa=this.cmdPlaca.getText();
-        if (!placa.isEmpty() && this.cmdTipoServicio.getSelectedIndex()!=-1){
-            
-        tipoS=this.cmdTipoServicio.getSelectedItem().toString();
-        String cad=this.myPrincipal.getMyEmpresa().registrarBus(placa, tipoS);
-        
-        this.txtMostrarBR.setText(cad);
-        
-        cargarPlacas();
-        
-        }else{
-            
-        this.txtMostrarBR.setText("Debe Digitar una placa Y El tipo de servicio");
-    }
-        
-    }//GEN-LAST:event_cmdCrearBActionPerformed
-
-    private void cmdListarBAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdListarBAActionPerformed
-        String cad=this.myPrincipal.getMyEmpresa().listarBus();
-        txtMostrar.setText(cad);
-    }//GEN-LAST:event_cmdListarBAActionPerformed
-
-    private void cmdPlacaActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdPlacaActualizarActionPerformed
-
-      String placaSeleccionada = cmdPlacaActualizar.getSelectedItem().toString();
-      
-       String cad= this.myPrincipal.getMyEmpresa().retornarDatosbus(placaSeleccionada);
-       String[] datos= cad.split(",");
-       String capacidad="30";
-       switch (datos[0]){
-           case "Ejecutivo":
-               capacidad="40";
-               break;
-           case "Normal":
-               capacidad="30";
-               break;
-       }
-        cmdTipoServActualizar.setText(datos[0]);
-        cmdEstadoActualizar.setSelectedItem(datos[1]);
-        txtCapacidadActualizar.setText(capacidad);
-     
-    }//GEN-LAST:event_cmdPlacaActualizarActionPerformed
-
-    private void cmdCrearRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCrearRActionPerformed
-        // TODO add your handling code here:
-        try{
-        String text=txtTarifa.getText().trim();
-        
-        if (!txtDestinoR.getText().isEmpty()&& !text.isEmpty()){
-            
-        String destino=txtDestinoR.getText();
-        int viajeTime=(int)cmdHoraR.getValue();
-        int tarifaB=Integer.parseInt(this.txtTarifa.getText());
-        
-        String cad=this.myPrincipal.getMyEmpresa().registrarRuta(destino,tarifaB,viajeTime);
-        
-        this.txtMostrarR.setText(cad); 
-        cargarRutas();
-        }else{
-        this.txtMostrarR.setText("Debe rellenar todos los parametros");
-        }
-        }catch(NumberFormatException e){
-            this.txtMostrarR.setText( "Ingrese un valor valido");
-        }
-    }//GEN-LAST:event_cmdCrearRActionPerformed
-
-    private void txtTarifaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTarifaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtTarifaActionPerformed
-
-    private void cmdListarRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdListarRActionPerformed
-        // TODO add your handling code here:
-        String cad=this.myPrincipal.getMyEmpresa().listarRuta();
-        this.txtMostrarR.setText(cad);
-    }//GEN-LAST:event_cmdListarRActionPerformed
-
-    private void cmdFechaSAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cmdFechaSAncestorAdded
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cmdFechaSAncestorAdded
-
-    private void cmdActualizarEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdActualizarEstadoActionPerformed
-       String placa, estado;
-
-       placa = cmdPlacaActualizar.getSelectedItem().toString();
-       estado = this.cmdEstadoActualizar.getSelectedItem().toString();
-    
-        String cad=this.myPrincipal.getMyEmpresa().actualizarBus(placa, estado);
-        this.txtMostrar.setText(cad);    
-    }
-    
-    
     /*
-        this.txtMostrar.setText(cad);    }//GEN-LAST:event_cmdActualizarEstadoActionPerformed
+        this.txtMostrar.setText(cad);    }                                                   
 */
-    private void cmdBusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdBusActionPerformed
-        // TODO add your handling code here:
-       String placaSeleccionada = cmdBus.getSelectedItem().toString();
-      
-       String cad= this.myPrincipal.getMyEmpresa().retornarDatosbus(placaSeleccionada);
-       String[] datos= cad.split(",");
-              String capacidad="30";
-       switch (datos[0]){
-           case "Ejecutivo":
-               capacidad="40";
-               break;
-           case "Normal":
-               capacidad="30";
-               break;
-       }
-       txtCapacidadSalida.setText(capacidad);
-    }//GEN-LAST:event_cmdBusActionPerformed
-
     private void cmdListarSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdListarSActionPerformed
         // TODO add your handling code here:
         String cad=this.myPrincipal.getMyEmpresa().listarSalida();
         this.txtMostrarSr.setText(cad);
     }//GEN-LAST:event_cmdListarSActionPerformed
 
+    /*
+        this.txtMostrar.setText(cad);    }                                                   
+*/
+    private void cmdBusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdBusActionPerformed
+        // TODO add your handling code here:
+        String placaSeleccionada = cmdBus.getSelectedItem().toString();
+
+        String cad= this.myPrincipal.getMyEmpresa().retornarDatosbus(placaSeleccionada);
+        String[] datos= cad.split(",");
+        String capacidad="30";
+        switch (datos[0]){
+            case "Ejecutivo":
+            capacidad="40";
+            break;
+            case "Normal":
+            capacidad="30";
+            break;
+        }
+        txtCapacidadSalida.setText(capacidad);
+    }//GEN-LAST:event_cmdBusActionPerformed
+
     private void cmdRutaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdRutaActionPerformed
         // TODO add your handling code here:
         String rutaSeleccionada=cmdRuta.getSelectedItem().toString();
-        
+
         String cad=this.myPrincipal.getMyEmpresa().retornarDatosRuta(rutaSeleccionada);
         String[] datos= cad.split(",");
         txtOrigenS.setText(datos[0]);
         txtDestinoS.setText(datos[1]);
     }//GEN-LAST:event_cmdRutaActionPerformed
 
-    private void cmdRutaAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdRutaAActionPerformed
+    private void cmdFechaSAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cmdFechaSAncestorAdded
         // TODO add your handling code here:
-        
-        String rutaSeleccionada=cmdRutaA.getSelectedItem().toString();
-        txtTarifaA.setEditable(true);
-        
-        String cad=this.myPrincipal.getMyEmpresa().retornarDatosRuta(rutaSeleccionada);
-        String[] datos= cad.split(",");
-        txtOrigen.setText(datos[0]);
-        txtDestino.setText(datos[1]);
-        txtTarifaA.setText(datos[2]);
-        
-        
-    }//GEN-LAST:event_cmdRutaAActionPerformed
+    }//GEN-LAST:event_cmdFechaSAncestorAdded
 
     private void cmdActualizarRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdActualizarRActionPerformed
         // TODO add your handling code here:
         try{
-        String ruta;
-         int tarifa;
-        
-        ruta = cmdRutaA.getSelectedItem().toString();
-       tarifa = Integer.parseInt(txtTarifaA.getText());
-    
-        String cad=this.myPrincipal.getMyEmpresa().actualizarRuta(ruta, tarifa);
-        this.txtMostrarRutaA.setText(cad); 
+            String ruta;
+            int tarifa;
+
+            ruta = cmdRutaA.getSelectedItem().toString();
+            tarifa = Integer.parseInt(txtTarifaA.getText());
+
+            String cad=this.myPrincipal.getMyEmpresa().actualizarRuta(ruta, tarifa);
+            this.txtMostrarRutaA.setText(cad);
         }catch(NumberFormatException e){
             this.txtMostrarRutaA.setText("Ingrese un valor valido");
         }
@@ -1317,55 +1070,185 @@ public class Parametrizacion extends javax.swing.JFrame {
         this.txtMostrarRutaA.setText(cad);
     }//GEN-LAST:event_cmdListarRutasAActionPerformed
 
-    private void cmdBus1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdBus1ActionPerformed
+    private void cmdRutaAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdRutaAActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cmdBus1ActionPerformed
 
-    private void cmdListarSAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdListarSAActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cmdListarSAActionPerformed
+        String rutaSeleccionada=cmdRutaA.getSelectedItem().toString();
+        txtTarifaA.setEditable(true);
 
-    private void cmdActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdActualizarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cmdActualizarActionPerformed
+        String cad=this.myPrincipal.getMyEmpresa().retornarDatosRuta(rutaSeleccionada);
+        String[] datos= cad.split(",");
+        txtOrigen.setText(datos[0]);
+        txtDestino.setText(datos[1]);
+        txtTarifaA.setText(datos[2]);
 
-    private void cmdSalidaAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSalidaAActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cmdSalidaAActionPerformed
+    }//GEN-LAST:event_cmdRutaAActionPerformed
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    private void cmdListarRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdListarRActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+        String cad=this.myPrincipal.getMyEmpresa().listarRuta();
+        this.txtMostrarR.setText(cad);
+    }//GEN-LAST:event_cmdListarRActionPerformed
+
+    private void cmdCrearRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCrearRActionPerformed
+        // TODO add your handling code here:
+        try{
+            String text=txtTarifa.getText().trim();
+
+            if (!txtDestinoR.getText().isEmpty()&& !text.isEmpty()){
+
+                String destino=txtDestinoR.getText();
+                int viajeTime=(int)cmdHoraR.getValue();
+                int tarifaB=Integer.parseInt(this.txtTarifa.getText());
+
+                String cad=this.myPrincipal.getMyEmpresa().registrarRuta(destino,tarifaB,viajeTime);
+
+                this.txtMostrarR.setText(cad);
+                cargarRutas();
+            }else{
+                this.txtMostrarR.setText("Debe rellenar todos los parametros");
+            }
+        }catch(NumberFormatException e){
+            this.txtMostrarR.setText( "Ingrese un valor valido");
+        }
+    }//GEN-LAST:event_cmdCrearRActionPerformed
+
+    private void txtTarifaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTarifaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTarifaActionPerformed
+
+    private void cmdActualizarEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdActualizarEstadoActionPerformed
+        String placa, estado;
+
+        placa = cmdPlacaActualizar.getSelectedItem().toString();
+        estado = this.cmdEstadoActualizar.getSelectedItem().toString();
+
+        String cad=this.myPrincipal.getMyEmpresa().actualizarBus(placa, estado);
+        this.txtMostrar.setText(cad);
+        
+
+        
+    }//GEN-LAST:event_cmdActualizarEstadoActionPerformed
+
+    private void cmdListarBAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdListarBAActionPerformed
+        String cad=this.myPrincipal.getMyEmpresa().listarBus();
+        txtMostrar.setText(cad);
+    }//GEN-LAST:event_cmdListarBAActionPerformed
+
+    private void cmdPlacaActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdPlacaActualizarActionPerformed
+
+        String placaSeleccionada = cmdPlacaActualizar.getSelectedItem().toString();
+
+        String cad= this.myPrincipal.getMyEmpresa().retornarDatosbus(placaSeleccionada);
+        String[] datos= cad.split(",");
+        String capacidad="30";
+        switch (datos[0]){
+            case "Ejecutivo":
+            capacidad="40";
+            break;
+            case "Normal":
+            capacidad="30";
+            break;
+        }
+        cmdTipoServActualizar.setText(datos[0]);
+        cmdEstadoActualizar.setSelectedItem(datos[1]);
+        txtCapacidadActualizar.setText(capacidad);
+
+    }//GEN-LAST:event_cmdPlacaActualizarActionPerformed
+
+    private void cmdListarBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdListarBActionPerformed
+        // TODO add your handling code here:
+        String cad=this.myPrincipal.getMyEmpresa().listarBus();
+        this.txtMostrarBR.setText(cad);
+    }//GEN-LAST:event_cmdListarBActionPerformed
+
+    private void cmdCrearBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCrearBActionPerformed
+        // TODO add your handling code here:
+        String placa,tipoS;
+        placa=this.cmdPlaca.getText();
+        if (!placa.isEmpty() && this.cmdTipoServicio.getSelectedIndex()!=-1){
+
+            tipoS=this.cmdTipoServicio.getSelectedItem().toString();
+            String cad=this.myPrincipal.getMyEmpresa().registrarBus(placa, tipoS);
+
+            this.txtMostrarBR.setText(cad);
+
+            cargarPlacas();
+
+        }else{
+
+            this.txtMostrarBR.setText("Debe Digitar una placa Y El tipo de servicio");
+        }
+
+    }//GEN-LAST:event_cmdCrearBActionPerformed
+
+    private void txtCapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCapActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCapActionPerformed
+
+    private void cmdTipoServicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdTipoServicioActionPerformed
+        // TODO add your handling code here:
+        String tipo = cmdTipoServicio.getSelectedItem().toString();
+
+        switch(tipo){
+            case "Normal":
+            txtCap.setText("40");
+            break;
+            case "Ejecutivo":
+            txtCap.setText("30");
+            break;
+        }
+
+    }//GEN-LAST:event_cmdTipoServicioActionPerformed
+
+    private void cmdFechaIngresoAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cmdFechaIngresoAncestorAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmdFechaIngresoAncestorAdded
+
+    private void cmdCrearCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCrearCActionPerformed
+    String documento = txtDocumentoConductor.getText();
+    String nombre = txtNombreConductor.getText();
+    Date fecha = cmdFechaIngreso.getDate();
+    String respuesta =this.myPrincipal.getMyEmpresa().registrarConductor(documento,nombre,fecha);
+        txtMostrarCond.setText(respuesta);
+        if(respuesta.contains("Conductor registrado correctamente")){
+          txtDocumentoConductor.setText("");
+          txtNombreConductor.setText("");
+          cmdFechaIngreso.setDate(null);
+}
+    }//GEN-LAST:event_cmdCrearCActionPerformed
+
+    private void cmdListarCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdListarCActionPerformed
+        txtMostrarCond.setText(this.myPrincipal.getMyEmpresa().listarConductores());
+    }//GEN-LAST:event_cmdListarCActionPerformed
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cmdActualizar;
     private javax.swing.JButton cmdActualizarEstado;
     private javax.swing.JButton cmdActualizarR;
     private javax.swing.JComboBox<String> cmdBus;
-    private javax.swing.JComboBox<String> cmdBus1;
     private javax.swing.JComboBox<String> cmdConductor;
     private javax.swing.JButton cmdCrearB;
+    private javax.swing.JButton cmdCrearC;
     private javax.swing.JButton cmdCrearR;
     private javax.swing.JButton cmdCrearS;
     private javax.swing.JComboBox<String> cmdEstadoActualizar;
+    private com.toedter.calendar.JDateChooser cmdFechaIngreso;
     private com.toedter.calendar.JDateChooser cmdFechaS;
     private javax.swing.JSpinner cmdHoraR;
     private javax.swing.JSpinner cmdHoraS;
     private javax.swing.JButton cmdListarB;
     private javax.swing.JButton cmdListarBA;
+    private javax.swing.JButton cmdListarC;
     private javax.swing.JButton cmdListarR;
     private javax.swing.JButton cmdListarRutasA;
     private javax.swing.JButton cmdListarS;
-    private javax.swing.JButton cmdListarSA;
     private javax.swing.JTextField cmdPlaca;
     private javax.swing.JComboBox<String> cmdPlacaActualizar;
     private javax.swing.JComboBox<String> cmdRuta;
     private javax.swing.JComboBox<String> cmdRutaA;
-    private javax.swing.JComboBox<String> cmdSalidaA;
     private javax.swing.JTextField cmdTipoServActualizar;
     private javax.swing.JComboBox<String> cmdTipoServicio;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1393,13 +1276,6 @@ public class Parametrizacion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
-    private javax.swing.JLabel jLabel33;
-    private javax.swing.JLabel jLabel34;
-    private javax.swing.JLabel jLabel35;
-    private javax.swing.JLabel jLabel36;
-    private javax.swing.JLabel jLabel37;
-    private javax.swing.JLabel jLabel38;
-    private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel40;
     private javax.swing.JLabel jLabel5;
@@ -1408,7 +1284,6 @@ public class Parametrizacion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -1418,36 +1293,35 @@ public class Parametrizacion extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane8;
-    private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTabbedPane jTabbedPane3;
     private javax.swing.JTabbedPane jTabbedPane4;
+    private javax.swing.JTabbedPane jTabbedPane5;
     private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextPane lblHora;
     private javax.swing.JTextField txtCap;
     private javax.swing.JTextField txtCapacidadActualizar;
     private javax.swing.JTextField txtCapacidadSalida;
-    private javax.swing.JTextField txtCapacidadSalida1;
     private javax.swing.JTextField txtDestino;
     private javax.swing.JTextField txtDestinoR;
     private javax.swing.JTextField txtDestinoS;
-    private javax.swing.JTextField txtDestinoS1;
-    private javax.swing.JTextField txtFechaS;
-    private javax.swing.JTextField txtHoraS;
+    private javax.swing.JTextField txtDocumentoConductor;
     private javax.swing.JTextArea txtMostrar;
     private javax.swing.JTextArea txtMostrarBR;
+    private javax.swing.JTextArea txtMostrarCond;
     private javax.swing.JTextArea txtMostrarR;
     private javax.swing.JTextArea txtMostrarRutaA;
     private javax.swing.JTextArea txtMostrarSr;
-    private javax.swing.JTextArea txtMostrarSr1;
+    private javax.swing.JTextField txtNombreConductor;
     private javax.swing.JTextField txtOrigen;
     private javax.swing.JTextField txtOrigenS;
-    private javax.swing.JTextField txtOrigenS1;
-    private javax.swing.JTextField txtRutaS;
     private javax.swing.JTextField txtTarifa;
     private javax.swing.JTextField txtTarifaA;
     // End of variables declaration//GEN-END:variables
